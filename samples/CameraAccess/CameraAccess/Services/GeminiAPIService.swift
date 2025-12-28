@@ -41,24 +41,31 @@ enum GeminiTranslationError: Error {
     }
 }
 
-enum GeminiModel: String {
+// FIXED: Added fallback model cases for when -latest versions don't work
+enum GeminiModel: String, CaseIterable {
     case flash2_0 = "gemini-2.0-flash-exp"           // Latest, fastest
-    case flash1_5 = "gemini-1.5-flash"               // Stable, proven
-    case pro1_5 = "gemini-1.5-pro"                   // Higher quality, slower
+    case flash1_5 = "gemini-1.5-flash-latest"        // Stable with -latest suffix
+    case pro1_5 = "gemini-1.5-pro-latest"            // Higher quality with -latest suffix
+    
+    // Fallback models (without -latest) - used by ModelTestingViewModel
+    case flash1_5_base = "gemini-1.5-flash"
+    case pro1_5_base = "gemini-1.5-pro"
     
     var displayName: String {
         switch self {
         case .flash2_0: return "Gemini 2.0 Flash (Fastest)"
-        case .flash1_5: return "Gemini 1.5 Flash (Stable)"
-        case .pro1_5: return "Gemini 1.5 Pro (Highest Quality)"
+        case .flash1_5: return "Gemini 1.5 Flash (Latest)"
+        case .pro1_5: return "Gemini 1.5 Pro (Latest)"
+        case .flash1_5_base: return "Gemini 1.5 Flash (Base)"
+        case .pro1_5_base: return "Gemini 1.5 Pro (Base)"
         }
     }
     
     var costPerRequest: Double {
         switch self {
         case .flash2_0: return 0.0001
-        case .flash1_5: return 0.0002
-        case .pro1_5: return 0.0010
+        case .flash1_5, .flash1_5_base: return 0.0002
+        case .pro1_5, .pro1_5_base: return 0.0010
         }
     }
 }
