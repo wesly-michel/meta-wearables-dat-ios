@@ -41,40 +41,24 @@ enum GeminiTranslationError: Error {
     }
 }
 
-// ========================================
-// GEMINI MODEL ENUM - UPDATED WITH FALLBACKS
-// ========================================
-enum GeminiModel: String, CaseIterable {
-    case flash2_0 = "gemini-2.0-flash-exp"           // Latest, fastest (experimental)
-    case flash1_5 = "gemini-1.5-flash-latest"        // Stable with -latest suffix
-    case pro1_5 = "gemini-1.5-pro-latest"            // Higher quality with -latest suffix
-    
-    // FALLBACK MODELS - Used when -latest versions fail
-    case flash1_5_base = "gemini-1.5-flash"          // Fallback for 1.5 Flash
-    case pro1_5_base = "gemini-1.5-pro"              // Fallback for 1.5 Pro
+enum GeminiModel: String {
+    case flash2_0 = "gemini-2.0-flash-exp"           // Latest, fastest
+    case flash1_5 = "gemini-1.5-flash"               // Stable, proven
+    case pro1_5 = "gemini-1.5-pro"                   // Higher quality, slower
     
     var displayName: String {
         switch self {
-        case .flash2_0: return "Gemini 2.0 Flash (Experimental)"
-        case .flash1_5: return "Gemini 1.5 Flash Latest"
-        case .pro1_5: return "Gemini 1.5 Pro Latest"
-        case .flash1_5_base: return "Gemini 1.5 Flash (Base)"
-        case .pro1_5_base: return "Gemini 1.5 Pro (Base)"
+        case .flash2_0: return "Gemini 2.0 Flash (Fastest)"
+        case .flash1_5: return "Gemini 1.5 Flash (Stable)"
+        case .pro1_5: return "Gemini 1.5 Pro (Highest Quality)"
         }
     }
     
     var costPerRequest: Double {
         switch self {
         case .flash2_0: return 0.0001
-        case .flash1_5, .flash1_5_base: return 0.0002
-        case .pro1_5, .pro1_5_base: return 0.0010
-        }
-    }
-    
-    var isExperimental: Bool {
-        switch self {
-        case .flash2_0: return true
-        default: return false
+        case .flash1_5: return 0.0002
+        case .pro1_5: return 0.0010
         }
     }
 }
@@ -94,12 +78,13 @@ enum PromptStrategy: String {
 }
 
 class GeminiAPIService {
-    private let apiKey: String
+    // FIXED: Changed from private to internal - needed by extension in GeminiAPIService-VisualQA.swift
+    internal let apiKey: String
     private var model: GeminiModel
     private var promptStrategy: PromptStrategy
     
-    // Image compression quality (0.0-1.0)
-    private let imageCompressionQuality: CGFloat = 0.7
+    // FIXED: Changed from private to internal - needed by extension in GeminiAPIService-VisualQA.swift
+    internal let imageCompressionQuality: CGFloat = 0.7
     
     // Generation config
     private var temperature: Double = 0.1  // Lower = more consistent (was 0.2)
@@ -110,6 +95,13 @@ class GeminiAPIService {
         self.apiKey = apiKey
         self.model = model
         self.promptStrategy = promptStrategy
+    }
+    
+    // MARK: - Computed Properties
+    
+    // FIXED: Added endpoint property - needed by extension in GeminiAPIService-VisualQA.swift
+    internal var endpoint: String {
+        return "https://generativelanguage.googleapis.com/v1beta/models/\(model.rawValue):generateContent?key=\(apiKey)"
     }
     
     // MARK: - Model Selection
@@ -181,8 +173,7 @@ class GeminiAPIService {
             ]
         ]
         
-        // Make HTTP request
-        let endpoint = "https://generativelanguage.googleapis.com/v1beta/models/\(model.rawValue):generateContent?key=\(apiKey)"
+        // Make HTTP request - uses endpoint property
         guard let url = URL(string: endpoint) else {
             throw GeminiTranslationError.apiError("Invalid endpoint URL")
         }
