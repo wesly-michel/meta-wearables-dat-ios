@@ -13,6 +13,14 @@
 		7B9F89B92EF6E28E00D631F2 /* FrameThrottler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F89B42EF6E28E00D631F2 /* FrameThrottler.swift */; };
 		7B9F89BA2EF6E28E00D631F2 /* TTSService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F89B62EF6E28E00D631F2 /* TTSService.swift */; };
 		7B9F89BB2EF6E28E00D631F2 /* ClaudeAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F89B32EF6E28E00D631F2 /* ClaudeAPIService.swift */; };
+		7B9F89CE2F0116A800D631F2 /* ModelTestingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F89CD2F0116A500D631F2 /* ModelTestingViewModel.swift */; };
+		7B9F89CF2F011DB000D631F2 /* ModelTestingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F89CB2F01166100D631F2 /* ModelTestingView.swift */; };
+		7B9F89D62F013BA000D631F2 /* VoiceQueryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F89D42F013BA000D631F2 /* VoiceQueryService.swift */; };
+		7B9F89D92F013C1400D631F2 /* GeminiAPIService-VisualQA.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F89D82F013C1400D631F2 /* GeminiAPIService-VisualQA.swift */; };
+		7B9F89DB2F013C3300D631F2 /* VoiceActivationDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F89DA2F013C3300D631F2 /* VoiceActivationDetector.swift */; };
+		7B9F89DD2F013C4800D631F2 /* SceneContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F89DC2F013C4800D631F2 /* SceneContextManager.swift */; };
+		7B9F89DF2F013C8700D631F2 /* ContinuousVisionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F89DE2F013C8700D631F2 /* ContinuousVisionViewModel.swift */; };
+		7B9F89E12F013CAA00D631F2 /* ContinuousVisionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F89E02F013CAA00D631F2 /* ContinuousVisionView.swift */; };
 		8F2D23802E856711002D0588 /* DebugMenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2D237F2E856711002D0588 /* DebugMenuViewModel.swift */; };
 		8F8F00782E8ACB4600A4BDAF /* WearablesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F8F00772E8ACB4500A4BDAF /* WearablesViewModel.swift */; };
 		8FD96B7F2E6F0A9800F56AB1 /* CameraAccessApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD96B792E6F0A9800F56AB1 /* CameraAccessApp.swift */; };
@@ -73,6 +81,14 @@
 		7B9F89B42EF6E28E00D631F2 /* FrameThrottler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameThrottler.swift; sourceTree = "<group>"; };
 		7B9F89B52EF6E28E00D631F2 /* GeminiAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeminiAPIService.swift; sourceTree = "<group>"; };
 		7B9F89B62EF6E28E00D631F2 /* TTSService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTSService.swift; sourceTree = "<group>"; };
+		7B9F89CB2F01166100D631F2 /* ModelTestingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelTestingView.swift; sourceTree = "<group>"; };
+		7B9F89CD2F0116A500D631F2 /* ModelTestingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelTestingViewModel.swift; sourceTree = "<group>"; };
+		7B9F89D42F013BA000D631F2 /* VoiceQueryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceQueryService.swift; sourceTree = "<group>"; };
+		7B9F89D82F013C1400D631F2 /* GeminiAPIService-VisualQA.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GeminiAPIService-VisualQA.swift"; sourceTree = "<group>"; };
+		7B9F89DA2F013C3300D631F2 /* VoiceActivationDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceActivationDetector.swift; sourceTree = "<group>"; };
+		7B9F89DC2F013C4800D631F2 /* SceneContextManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneContextManager.swift; sourceTree = "<group>"; };
+		7B9F89DE2F013C8700D631F2 /* ContinuousVisionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinuousVisionViewModel.swift; sourceTree = "<group>"; };
+		7B9F89E02F013CAA00D631F2 /* ContinuousVisionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinuousVisionView.swift; sourceTree = "<group>"; };
 		8F2D237F2E856711002D0588 /* DebugMenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugMenuViewModel.swift; sourceTree = "<group>"; };
 		8F8F00772E8ACB4500A4BDAF /* WearablesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WearablesViewModel.swift; sourceTree = "<group>"; };
 		8FD96B6F2E6F0A9800F56AB1 /* StreamSessionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamSessionViewModel.swift; sourceTree = "<group>"; };
@@ -143,9 +159,13 @@
 		7B9F89B72EF6E28E00D631F2 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				7B9F89D42F013BA000D631F2 /* VoiceQueryService.swift */,
 				7B9F89B32EF6E28E00D631F2 /* ClaudeAPIService.swift */,
 				7B9F89B42EF6E28E00D631F2 /* FrameThrottler.swift */,
 				7B9F89B52EF6E28E00D631F2 /* GeminiAPIService.swift */,
+				7B9F89DC2F013C4800D631F2 /* SceneContextManager.swift */,
+				7B9F89DA2F013C3300D631F2 /* VoiceActivationDetector.swift */,
+				7B9F89D82F013C1400D631F2 /* GeminiAPIService-VisualQA.swift */,
 				7B9F89B62EF6E28E00D631F2 /* TTSService.swift */,
 			);
 			path = Services;
@@ -161,6 +181,8 @@
 		8FD96B702E6F0A9800F56AB1 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				7B9F89DE2F013C8700D631F2 /* ContinuousVisionViewModel.swift */,
+				7B9F89CD2F0116A500D631F2 /* ModelTestingViewModel.swift */,
 				7B9F89A42EF6D5A800D631F2 /* TranslationViewModel.swift */,
 				8FFD602B2E8433E20035E446 /* MockDeviceKit */,
 				8F2D237F2E856711002D0588 /* DebugMenuViewModel.swift */,
@@ -173,6 +195,8 @@
 		8FD96B762E6F0A9800F56AB1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				7B9F89E02F013CAA00D631F2 /* ContinuousVisionView.swift */,
+				7B9F89CB2F01166100D631F2 /* ModelTestingView.swift */,
 				7B9F89AC2EF6DC8100D631F2 /* CameraTranslationView.swift */,
 				8FFD5FF42E8422580035E446 /* Components */,
 				E6DA451B2E79A63100E3F688 /* MockDeviceKit */,
@@ -358,9 +382,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7B9F89CF2F011DB000D631F2 /* ModelTestingView.swift in Sources */,
 				8FD96B7F2E6F0A9800F56AB1 /* CameraAccessApp.swift in Sources */,
 				8FD96B812E6F0A9800F56AB1 /* HomeScreenView.swift in Sources */,
+				7B9F89D62F013BA000D631F2 /* VoiceQueryService.swift in Sources */,
 				8F2D23802E856711002D0588 /* DebugMenuViewModel.swift in Sources */,
+				7B9F89E12F013CAA00D631F2 /* ContinuousVisionView.swift in Sources */,
 				8FFD60542E849D0D0035E446 /* RegistrationView.swift in Sources */,
 				8FFD60342E8434070035E446 /* MediaPickerView.swift in Sources */,
 				8FFD60352E8434070035E446 /* StatusText.swift in Sources */,
@@ -373,6 +400,7 @@
 				8FD96B872E6F0A9800F56AB1 /* StreamSessionViewModel.swift in Sources */,
 				7B9F89A52EF6D5A800D631F2 /* TranslationViewModel.swift in Sources */,
 				8FD96B882E6F0A9800F56AB1 /* StreamSessionView.swift in Sources */,
+				7B9F89CE2F0116A800D631F2 /* ModelTestingViewModel.swift in Sources */,
 				8FFD60602E84A2F70035E446 /* MainAppView.swift in Sources */,
 				8FFD60612E84A2F70035E446 /* DebugMenuView.swift in Sources */,
 				8FD96B8A2E6F0A9800F56AB1 /* PhotoPreviewView.swift in Sources */,
@@ -384,8 +412,12 @@
 				7B9F89BA2EF6E28E00D631F2 /* TTSService.swift in Sources */,
 				7B9F89BB2EF6E28E00D631F2 /* ClaudeAPIService.swift in Sources */,
 				8FFD5FF52E8422580035E446 /* CircleButton.swift in Sources */,
+				7B9F89DB2F013C3300D631F2 /* VoiceActivationDetector.swift in Sources */,
+				7B9F89D92F013C1400D631F2 /* GeminiAPIService-VisualQA.swift in Sources */,
 				8FFD5FF62E8422580035E446 /* CustomButton.swift in Sources */,
+				7B9F89DF2F013C8700D631F2 /* ContinuousVisionViewModel.swift in Sources */,
 				E6FD3BCE2EB4D53A00E7FE5D /* NonStreamView.swift in Sources */,
+				7B9F89DD2F013C4800D631F2 /* SceneContextManager.swift in Sources */,
 				7B9F89AD2EF6DC8100D631F2 /* CameraTranslationView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -7,12 +7,10 @@
  */
 
 //
-// CameraAccessApp.swift
+// CameraAccessApp.swift (UPDATED)
 //
 // Main entry point for the CameraAccess sample app demonstrating the Meta Wearables DAT SDK.
-// This app shows how to connect to wearable devices (like Ray-Ban Meta smart glasses),
-// stream live video from their cameras, and capture photos. It provides a complete example
-// of DAT SDK integration including device registration, permissions, and media streaming.
+// UPDATED: Added TabView with Translation and Testing modes for optimization.
 //
 
 import Foundation
@@ -47,25 +45,37 @@ struct CameraAccessApp: App {
 
   var body: some Scene {
     WindowGroup {
-      // Main app view with access to the shared Wearables SDK instance
-      // The Wearables.shared singleton provides the core DAT API
-      MainAppView(wearables: Wearables.shared, viewModel: wearablesViewModel)
-        // Show error alerts for view model failures
-        .alert("Error", isPresented: $wearablesViewModel.showError) {
-          Button("OK") {
-            wearablesViewModel.dismissError()
+      // ✅ NEW: TabView for switching between Translation and Testing
+      TabView {
+        // Tab 1: Main Translation View
+        CameraTranslationView()
+          .tabItem {
+            Label("Translate", systemImage: "camera.fill")
           }
-        } message: {
-          Text(wearablesViewModel.errorMessage)
+        
+        // Tab 2: Model Testing View
+        ModelTestingView()
+          .tabItem {
+            Label("Testing", systemImage: "cpu.fill")
+          }
+      }
+      .accentColor(.blue)
+      // Error alerts from view model
+      .alert("Error", isPresented: $wearablesViewModel.showError) {
+        Button("OK") {
+          wearablesViewModel.dismissError()
         }
-        #if DEBUG
+      } message: {
+        Text(wearablesViewModel.errorMessage)
+      }
+      #if DEBUG
       .sheet(isPresented: $debugMenuViewModel.showDebugMenu) {
         MockDeviceKitView(viewModel: debugMenuViewModel.mockDeviceKitViewModel)
       }
       .overlay {
         DebugMenuView(debugMenuViewModel: debugMenuViewModel)
       }
-        #endif
+      #endif  // DEBUG
 
       // Registration view handles the flow for connecting to the glasses via Meta AI
       RegistrationView(viewModel: wearablesViewModel)
