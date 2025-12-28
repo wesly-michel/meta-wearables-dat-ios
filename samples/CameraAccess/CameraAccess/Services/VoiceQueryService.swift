@@ -10,6 +10,7 @@ import Foundation
 import Speech
 import AVFoundation
 
+@MainActor
 class VoiceQueryService: NSObject {
     
     // MARK: - Properties

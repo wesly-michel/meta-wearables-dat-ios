@@ -9,6 +9,7 @@
 import AVFoundation
 import Foundation
 
+@MainActor
 class TTSService: NSObject, AVSpeechSynthesizerDelegate {
     private let synthesizer = AVSpeechSynthesizer()
     private var isSpeaking = false
@@ -23,7 +24,7 @@ class TTSService: NSObject, AVSpeechSynthesizerDelegate {
     private func configureAudioSession() {
         do {
             let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.playback, mode: .spokenAudio, options: [.allowBluetooth])
+            try audioSession.setCategory(.playback, mode: .spokenAudio, options: [.allowBluetoothHFP])
             try audioSession.setActive(true)
         } catch {
             print("⚠️ TTSService: Failed to configure audio session: \(error)")

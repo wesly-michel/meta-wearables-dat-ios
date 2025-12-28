@@ -174,7 +174,7 @@ struct ContinuousVisionView: View {
                 }
                 .padding()
             }
-            .onChange(of: viewModel.conversationHistory.count) { _ in
+            .onChange(of: viewModel.conversationHistory.count) {
                 if let lastMessage = viewModel.conversationHistory.last {
                     withAnimation {
                         proxy.scrollTo(lastMessage.id, anchor: .bottom)
