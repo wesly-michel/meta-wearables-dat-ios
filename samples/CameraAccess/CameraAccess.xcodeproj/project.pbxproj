@@ -7,12 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7B9F899E2EF6D55000D631F2 /* Translation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F89982EF6D55000D631F2 /* Translation.swift */; };
-		7B9F899F2EF6D55000D631F2 /* ClaudeAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F899A2EF6D55000D631F2 /* ClaudeAPIService.swift */; };
-		7B9F89A02EF6D55000D631F2 /* TTSService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F899C2EF6D55000D631F2 /* TTSService.swift */; };
-		7B9F89A12EF6D55000D631F2 /* FrameThrottler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F899B2EF6D55000D631F2 /* FrameThrottler.swift */; };
 		7B9F89A52EF6D5A800D631F2 /* TranslationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F89A42EF6D5A800D631F2 /* TranslationViewModel.swift */; };
-		7B9F89A72EF6D5CB00D631F2 /* CameraTranslationView 2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F89A62EF6D5CB00D631F2 /* CameraTranslationView 2.swift */; };
+		7B9F89AD2EF6DC8100D631F2 /* CameraTranslationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F89AC2EF6DC8100D631F2 /* CameraTranslationView.swift */; };
+		7B9F89B82EF6E28E00D631F2 /* GeminiAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F89B52EF6E28E00D631F2 /* GeminiAPIService.swift */; };
+		7B9F89B92EF6E28E00D631F2 /* FrameThrottler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F89B42EF6E28E00D631F2 /* FrameThrottler.swift */; };
+		7B9F89BA2EF6E28E00D631F2 /* TTSService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F89B62EF6E28E00D631F2 /* TTSService.swift */; };
+		7B9F89BB2EF6E28E00D631F2 /* ClaudeAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F89B32EF6E28E00D631F2 /* ClaudeAPIService.swift */; };
 		8F2D23802E856711002D0588 /* DebugMenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2D237F2E856711002D0588 /* DebugMenuViewModel.swift */; };
 		8F8F00782E8ACB4600A4BDAF /* WearablesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F8F00772E8ACB4500A4BDAF /* WearablesViewModel.swift */; };
 		8FD96B7F2E6F0A9800F56AB1 /* CameraAccessApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD96B792E6F0A9800F56AB1 /* CameraAccessApp.swift */; };
@@ -67,12 +67,12 @@
 
 /* Begin PBXFileReference section */
 		3A3A3A3A3A3A3A3A3A3A3A3A /* CameraAccess.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CameraAccess.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		7B9F89982EF6D55000D631F2 /* Translation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Translation.swift; sourceTree = "<group>"; };
-		7B9F899A2EF6D55000D631F2 /* ClaudeAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeAPIService.swift; sourceTree = "<group>"; };
-		7B9F899B2EF6D55000D631F2 /* FrameThrottler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameThrottler.swift; sourceTree = "<group>"; };
-		7B9F899C2EF6D55000D631F2 /* TTSService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTSService.swift; sourceTree = "<group>"; };
 		7B9F89A42EF6D5A800D631F2 /* TranslationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslationViewModel.swift; sourceTree = "<group>"; };
-		7B9F89A62EF6D5CB00D631F2 /* CameraTranslationView 2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CameraTranslationView 2.swift"; sourceTree = "<group>"; };
+		7B9F89AC2EF6DC8100D631F2 /* CameraTranslationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraTranslationView.swift; sourceTree = "<group>"; };
+		7B9F89B32EF6E28E00D631F2 /* ClaudeAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeAPIService.swift; sourceTree = "<group>"; };
+		7B9F89B42EF6E28E00D631F2 /* FrameThrottler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameThrottler.swift; sourceTree = "<group>"; };
+		7B9F89B52EF6E28E00D631F2 /* GeminiAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeminiAPIService.swift; sourceTree = "<group>"; };
+		7B9F89B62EF6E28E00D631F2 /* TTSService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTSService.swift; sourceTree = "<group>"; };
 		8F2D237F2E856711002D0588 /* DebugMenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugMenuViewModel.swift; sourceTree = "<group>"; };
 		8F8F00772E8ACB4500A4BDAF /* WearablesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WearablesViewModel.swift; sourceTree = "<group>"; };
 		8FD96B6F2E6F0A9800F56AB1 /* StreamSessionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamSessionViewModel.swift; sourceTree = "<group>"; };
@@ -103,6 +103,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		7B9F89AE2EF6E17F00D631F2 /* Models */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Models; sourceTree = "<group>"; };
 		E699CC962E8150670052C240 /* CameraAccessTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = CameraAccessTests; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
@@ -139,25 +140,16 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		7B9F89992EF6D55000D631F2 /* Models */ = {
+		7B9F89B72EF6E28E00D631F2 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				7B9F89982EF6D55000D631F2 /* Translation.swift */,
+				7B9F89B32EF6E28E00D631F2 /* ClaudeAPIService.swift */,
+				7B9F89B42EF6E28E00D631F2 /* FrameThrottler.swift */,
+				7B9F89B52EF6E28E00D631F2 /* GeminiAPIService.swift */,
+				7B9F89B62EF6E28E00D631F2 /* TTSService.swift */,
 			);
-			name = Models;
-			path = "/Users/weslymichel/Projects/meta-wearables-dat-ios/del/Models";
-			sourceTree = "<absolute>";
-		};
-		7B9F899D2EF6D55000D631F2 /* Services */ = {
-			isa = PBXGroup;
-			children = (
-				7B9F899A2EF6D55000D631F2 /* ClaudeAPIService.swift */,
-				7B9F899B2EF6D55000D631F2 /* FrameThrottler.swift */,
-				7B9F899C2EF6D55000D631F2 /* TTSService.swift */,
-			);
-			name = Services;
-			path = "/Users/weslymichel/Projects/meta-wearables-dat-ios/del/Services";
-			sourceTree = "<absolute>";
+			path = Services;
+			sourceTree = "<group>";
 		};
 		8F2A14F12DDBCEB900D4E5F2 /* Frameworks */ = {
 			isa = PBXGroup;
@@ -181,7 +173,7 @@
 		8FD96B762E6F0A9800F56AB1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				7B9F89A62EF6D5CB00D631F2 /* CameraTranslationView 2.swift */,
+				7B9F89AC2EF6DC8100D631F2 /* CameraTranslationView.swift */,
 				8FFD5FF42E8422580035E446 /* Components */,
 				E6DA451B2E79A63100E3F688 /* MockDeviceKit */,
 				8FFD605E2E84A2F70035E446 /* DebugMenuView.swift */,
@@ -199,6 +191,8 @@
 		8FD96B7D2E6F0A9800F56AB1 /* CameraAccess */ = {
 			isa = PBXGroup;
 			children = (
+				7B9F89B72EF6E28E00D631F2 /* Services */,
+				7B9F89AE2EF6E17F00D631F2 /* Models */,
 				8FD96B702E6F0A9800F56AB1 /* ViewModels */,
 				8FD96B762E6F0A9800F56AB1 /* Views */,
 				8FFD5FF82E8422B60035E446 /* Utils */,
@@ -206,8 +200,6 @@
 				8FD96B782E6F0A9800F56AB1 /* CameraAccess.entitlements */,
 				8FD96B792E6F0A9800F56AB1 /* CameraAccessApp.swift */,
 				8FD96B7B2E6F0A9800F56AB1 /* Info.plist */,
-				7B9F89992EF6D55000D631F2 /* Models */,
-				7B9F899D2EF6D55000D631F2 /* Services */,
 			);
 			path = CameraAccess;
 			sourceTree = "<group>";
@@ -267,6 +259,9 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				7B9F89AE2EF6E17F00D631F2 /* Models */,
+			);
 			name = CameraAccess;
 			productName = CameraAccess;
 			productReference = 3A3A3A3A3A3A3A3A3A3A3A3A /* CameraAccess.app */;
@@ -323,6 +318,12 @@
 			mainGroup = 5A5A5A5A5A5A5A5A5A5A5A5A;
 			packageReferences = (
 				95F7F3332DEF0D91006D1C1A /* XCRemoteSwiftPackageReference "meta-wearables-dat-ios" */,
+				7B9F89C52EF6F3CF00D631F2 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
+				7B9F89C62EF6F46800D631F2 /* XCRemoteSwiftPackageReference "swift-system" */,
+				7B9F89C72EF6F4AD00D631F2 /* XCRemoteSwiftPackageReference "swift-nio" */,
+				7B9F89C82EF6F4FE00D631F2 /* XCRemoteSwiftPackageReference "swift-certificates" */,
+				7B9F89C92EF6F52B00D631F2 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */,
+				7B9F89CA2EF6F55300D631F2 /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
 			);
 			productRefGroup = 7A7A7A7A7A7A7A7A7A7A7A7A /* Products */;
 			projectDirPath = "";
@@ -359,7 +360,6 @@
 			files = (
 				8FD96B7F2E6F0A9800F56AB1 /* CameraAccessApp.swift in Sources */,
 				8FD96B812E6F0A9800F56AB1 /* HomeScreenView.swift in Sources */,
-				7B9F89A72EF6D5CB00D631F2 /* CameraTranslationView 2.swift in Sources */,
 				8F2D23802E856711002D0588 /* DebugMenuViewModel.swift in Sources */,
 				8FFD60542E849D0D0035E446 /* RegistrationView.swift in Sources */,
 				8FFD60342E8434070035E446 /* MediaPickerView.swift in Sources */,
@@ -373,19 +373,20 @@
 				8FD96B872E6F0A9800F56AB1 /* StreamSessionViewModel.swift in Sources */,
 				7B9F89A52EF6D5A800D631F2 /* TranslationViewModel.swift in Sources */,
 				8FD96B882E6F0A9800F56AB1 /* StreamSessionView.swift in Sources */,
-				7B9F899E2EF6D55000D631F2 /* Translation.swift in Sources */,
-				7B9F899F2EF6D55000D631F2 /* ClaudeAPIService.swift in Sources */,
-				7B9F89A02EF6D55000D631F2 /* TTSService.swift in Sources */,
-				7B9F89A12EF6D55000D631F2 /* FrameThrottler.swift in Sources */,
 				8FFD60602E84A2F70035E446 /* MainAppView.swift in Sources */,
 				8FFD60612E84A2F70035E446 /* DebugMenuView.swift in Sources */,
 				8FD96B8A2E6F0A9800F56AB1 /* PhotoPreviewView.swift in Sources */,
 				E66D30242E7DA71900470B48 /* MockDeviceKitButton.swift in Sources */,
 				8F8F00782E8ACB4600A4BDAF /* WearablesViewModel.swift in Sources */,
 				E6A188482EB918740097D0E1 /* StreamView.swift in Sources */,
+				7B9F89B82EF6E28E00D631F2 /* GeminiAPIService.swift in Sources */,
+				7B9F89B92EF6E28E00D631F2 /* FrameThrottler.swift in Sources */,
+				7B9F89BA2EF6E28E00D631F2 /* TTSService.swift in Sources */,
+				7B9F89BB2EF6E28E00D631F2 /* ClaudeAPIService.swift in Sources */,
 				8FFD5FF52E8422580035E446 /* CircleButton.swift in Sources */,
 				8FFD5FF62E8422580035E446 /* CustomButton.swift in Sources */,
 				E6FD3BCE2EB4D53A00E7FE5D /* NonStreamView.swift in Sources */,
+				7B9F89AD2EF6DC8100D631F2 /* CameraTranslationView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -414,12 +415,11 @@
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = CameraAccess/CameraAccess.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "";
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = V9WTTPBFK9;
+				DEVELOPMENT_TEAM = T53J29QSP5;
 				ENABLE_PREVIEWS = YES;
 				FRAMEWORK_SEARCH_PATHS = "";
 				INFOPLIST_FILE = CameraAccess/Info.plist;
@@ -432,7 +432,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.meta.wearables.external.CameraAccess;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Facebook Generic";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -445,12 +444,11 @@
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = CameraAccess/CameraAccess.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "";
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = V9WTTPBFK9;
+				DEVELOPMENT_TEAM = T53J29QSP5;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = CameraAccess/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -462,7 +460,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.meta.wearables.external.CameraAccess;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Facebook Generic";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -674,6 +671,54 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		7B9F89C52EF6F3CF00D631F2 /* XCRemoteSwiftPackageReference "swift-algorithms" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-algorithms.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.1;
+			};
+		};
+		7B9F89C62EF6F46800D631F2 /* XCRemoteSwiftPackageReference "swift-system" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-system.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.6.3;
+			};
+		};
+		7B9F89C72EF6F4AD00D631F2 /* XCRemoteSwiftPackageReference "swift-nio" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-nio.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.92.0;
+			};
+		};
+		7B9F89C82EF6F4FE00D631F2 /* XCRemoteSwiftPackageReference "swift-certificates" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-certificates.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.17.0;
+			};
+		};
+		7B9F89C92EF6F52B00D631F2 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-async-algorithms.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.1;
+			};
+		};
+		7B9F89CA2EF6F55300D631F2 /* XCRemoteSwiftPackageReference "swift-argument-parser" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-argument-parser.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.7.0;
+			};
+		};
 		95F7F3332DEF0D91006D1C1A /* XCRemoteSwiftPackageReference "meta-wearables-dat-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/facebook/meta-wearables-dat-ios";

@@ -3,17 +3,18 @@
  * Ray-Ban Meta Translation App
  *
  * Main view for real-time camera-based translation.
- * Displays live video feed and translated text with performance metrics.
+ * Uses Gemini 2.0 Flash - 40x cheaper than Claude!
  */
 
 import SwiftUI
+import MWDATCore
 
 struct CameraTranslationView: View {
     @StateObject private var viewModel: TranslationViewModel
     @State private var showSettings = false
     
-    init(wearables: WearablesInterface = Wearables.shared) {
-        _viewModel = StateObject(wrappedValue: TranslationViewModel(wearables: wearables))
+    init() {
+        _viewModel = StateObject(wrappedValue: TranslationViewModel(wearables: Wearables.shared))
     }
     
     var body: some View {
@@ -211,6 +212,10 @@ struct CameraTranslationView: View {
             Text("Efficiency: \(viewModel.throttleEfficiency)")
                 .font(.caption2)
                 .foregroundColor(.white)
+            
+            Text("💰 Model: Gemini 2.0 Flash")
+                .font(.caption2)
+                .foregroundColor(.green)
         }
         .padding(8)
         .background(Color.black.opacity(0.7))
@@ -226,8 +231,10 @@ struct SettingsView: View {
     @Environment(\.dismiss) var dismiss
     
     @State private var apiKey: String = ""
+    @State private var showApiKey: Bool = false  // NEW: Toggle for showing/hiding key
     @State private var sourceLang: String = "Thai"
     @State private var targetLang: String = "English"
+    @State private var showSaveConfirmation: Bool = false  // NEW: Confirmation feedback
     
     let languages = ["English", "Thai", "Japanese", "Chinese", "Korean", "Spanish", "French", "German"]
     
@@ -235,18 +242,96 @@ struct SettingsView: View {
         NavigationView {
             Form {
                 Section("API Configuration") {
-                    SecureField("Claude API Key", text: $apiKey)
-                        .autocapitalization(.none)
-                        .autocorrectionDisabled()
+                    // API Key input with show/hide toggle
+                    HStack {
+                        if showApiKey {
+                            TextField("Gemini API Key", text: $apiKey)
+                                .autocapitalization(.none)
+                                .autocorrectionDisabled()
+                                .textContentType(.password)
+                        } else {
+                            SecureField("Gemini API Key", text: $apiKey)
+                                .autocapitalization(.none)
+                                .autocorrectionDisabled()
+                        }
+                        
+                        Button(action: {
+                            showApiKey.toggle()
+                        }) {
+                            Image(systemName: showApiKey ? "eye.slash.fill" : "eye.fill")
+                                .foregroundColor(.blue)
+                        }
+                    }
                     
+                    // Save button with confirmation
                     Button("Save API Key") {
-                        UserDefaults.standard.set(apiKey, forKey: "claudeAPIKey")
+                        let trimmedKey = apiKey.trimmingCharacters(in: .whitespacesAndNewlines)
+                        UserDefaults.standard.set(trimmedKey, forKey: "geminiAPIKey")
+                        showSaveConfirmation = true
+                        
+                        // Hide confirmation after 2 seconds
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            showSaveConfirmation = false
+                        }
                     }
                     .disabled(apiKey.isEmpty)
                     
-                    Text("Get your API key from console.anthropic.com")
-                        .font(.caption)
-                        .foregroundColor(.gray)
+                    if showSaveConfirmation {
+                        Text("✅ API Key saved successfully!")
+                            .font(.caption)
+                            .foregroundColor(.green)
+                    }
+                    
+                    // Display saved key for verification
+                    if !apiKey.isEmpty {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Current Key:")
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                            
+                            if showApiKey {
+                                Text(apiKey)
+                                    .font(.system(size: 10, design: .monospaced))
+                                    .foregroundColor(.blue)
+                                    .textSelection(.enabled)
+                            } else {
+                                Text(String(repeating: "•", count: min(apiKey.count, 40)))
+                                    .font(.caption)
+                                    .foregroundColor(.gray)
+                            }
+                            
+                            // Show key info
+                            HStack {
+                                Text("Length: \(apiKey.count) characters")
+                                    .font(.caption2)
+                                    .foregroundColor(.gray)
+                                
+                                if apiKey.hasPrefix("AIza") {
+                                    Text("✅ Valid format")
+                                        .font(.caption2)
+                                        .foregroundColor(.green)
+                                } else {
+                                    Text("⚠️ Should start with 'AIza'")
+                                        .font(.caption2)
+                                        .foregroundColor(.orange)
+                                }
+                            }
+                        }
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Get your FREE API key:")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                        
+                        Link("aistudio.google.com/apikey", destination: URL(string: "https://aistudio.google.com/apikey")!)
+                            .font(.caption)
+                        
+                        Text("💰 Gemini 2.0 Flash: ~$2-5/month vs Claude's $81-126/month")
+                            .font(.caption2)
+                            .foregroundColor(.green)
+                            .padding(.top, 4)
+                    }
                 }
                 
                 Section("Languages") {
@@ -276,15 +361,63 @@ struct SettingsView: View {
                     }
                 }
                 
+                Section("Debug Info") {
+                    // Show what's actually saved in UserDefaults
+                    if let savedKey = UserDefaults.standard.string(forKey: "geminiAPIKey") {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Saved in UserDefaults:")
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                            
+                            if showApiKey {
+                                Text(savedKey)
+                                    .font(.system(size: 10, design: .monospaced))
+                                    .foregroundColor(.green)
+                                    .textSelection(.enabled)
+                            } else {
+                                Text(String(repeating: "•", count: min(savedKey.count, 40)))
+                                    .font(.caption)
+                                    .foregroundColor(.gray)
+                            }
+                            
+                            HStack {
+                                Text("Saved length: \(savedKey.count)")
+                                    .font(.caption2)
+                                    .foregroundColor(.gray)
+                                
+                                if savedKey.hasPrefix("AIza") {
+                                    Text("✅")
+                                        .font(.caption2)
+                                } else {
+                                    Text("❌ Wrong format")
+                                        .font(.caption2)
+                                        .foregroundColor(.red)
+                                }
+                            }
+                        }
+                    } else {
+                        Text("No API key saved yet")
+                            .font(.caption)
+                            .foregroundColor(.orange)
+                    }
+                }
+                
                 Section("About") {
                     HStack {
                         Text("Version")
                         Spacer()
-                        Text("1.0.0")
+                        Text("1.0.0 (Gemini)")
                             .foregroundColor(.gray)
                     }
                     
-                    Link("Documentation", destination: URL(string: "https://docs.claude.com")!)
+                    HStack {
+                        Text("AI Model")
+                        Spacer()
+                        Text("Gemini 2.0 Flash")
+                            .foregroundColor(.green)
+                    }
+                    
+                    Link("Gemini API Docs", destination: URL(string: "https://ai.google.dev/gemini-api/docs")!)
                 }
             }
             .navigationTitle("Settings")
@@ -298,7 +431,8 @@ struct SettingsView: View {
             }
         }
         .onAppear {
-            apiKey = UserDefaults.standard.string(forKey: "claudeAPIKey") ?? ""
+            // Load from UserDefaults
+            apiKey = UserDefaults.standard.string(forKey: "geminiAPIKey") ?? ""
             sourceLang = viewModel.sourceLang
             targetLang = viewModel.targetLang
         }

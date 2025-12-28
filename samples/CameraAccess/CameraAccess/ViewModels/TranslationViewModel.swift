@@ -2,8 +2,8 @@
  * TranslationViewModel.swift
  * Ray-Ban Meta Translation App
  *
- * Handles real-time translation using Claude API.
- * Uses composition instead of inheritance to avoid private property access issues.
+ * Handles real-time translation using Gemini 2.0 Flash API.
+ * 40x cheaper than Claude (~$2-5/month vs $81-126/month for 30min/day usage)
  */
 
 import MWDATCamera
@@ -41,7 +41,7 @@ class TranslationViewModel: ObservableObject {
     
     // MARK: - Services
     
-    private let claudeAPI: ClaudeAPIService
+    private let geminiAPI: GeminiAPIService
     private let frameThrottler: FrameThrottler
     private let ttsService: TTSService
     
@@ -63,9 +63,9 @@ class TranslationViewModel: ObservableObject {
     init(wearables: WearablesInterface) {
         self.wearables = wearables
         
-        // Initialize services
-        let apiKey = UserDefaults.standard.string(forKey: "claudeAPIKey") ?? ""
-        self.claudeAPI = ClaudeAPIService(apiKey: apiKey)
+        // Initialize services with Gemini
+        let apiKey = UserDefaults.standard.string(forKey: "geminiAPIKey") ?? ""
+        self.geminiAPI = GeminiAPIService(apiKey: apiKey)
         self.frameThrottler = FrameThrottler(interval: throttleInterval)
         self.ttsService = TTSService()
         
@@ -188,7 +188,7 @@ class TranslationViewModel: ObservableObject {
         let startTime = Date()
         
         do {
-            let translation = try await claudeAPI.translateImage(
+            let translation = try await geminiAPI.translateImage(
                 image,
                 sourceLang: sourceLang,
                 targetLang: targetLang
@@ -217,7 +217,7 @@ class TranslationViewModel: ObservableObject {
                 await ttsService.speak(translation, language: languageCode)
             }
             
-        } catch let error as TranslationError {
+        } catch let error as GeminiTranslationError {
             translationError = error.localizedDescription
             print("❌ Translation failed: \(error.localizedDescription)")
         } catch {
