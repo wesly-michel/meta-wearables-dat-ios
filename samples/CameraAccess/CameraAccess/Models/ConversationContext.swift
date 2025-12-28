@@ -150,7 +150,7 @@ struct ConversationSession: Identifiable, Codable {
 
 // MARK: - Voice Query State
 
-enum VoiceQueryState {
+enum VoiceQueryState: Equatable {
     case idle
     case listening
     case processing

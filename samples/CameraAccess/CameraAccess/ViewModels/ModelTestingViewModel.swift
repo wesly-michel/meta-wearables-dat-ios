@@ -157,10 +157,22 @@ class ModelTestingViewModel: ObservableObject {
     
     // MARK: - Frame Capture
     
+    @Published var showCaptureSuccess: Bool = false
+    
     func captureFrameForTesting() {
-        guard let frame = currentVideoFrame else { return }
+        guard let frame = currentVideoFrame else { 
+            print("⚠️ No video frame available to capture")
+            return 
+        }
         capturedFrame = frame
+        showCaptureSuccess = true
         print("✅ Frame captured for testing")
+        
+        // Auto-hide success message after 2 seconds
+        Task {
+            try? await Task.sleep(nanoseconds: 2_000_000_000)
+            showCaptureSuccess = false
+        }
     }
     
     // MARK: - Testing Methods
@@ -172,6 +184,7 @@ class ModelTestingViewModel: ObservableObject {
         isTesting = true
         defer { isTesting = false }
         
+        // Test primary models first
         let models: [GeminiModel] = [.flash2_0, .flash1_5, .pro1_5]
         
         for model in models {
@@ -208,15 +221,69 @@ class ModelTestingViewModel: ObservableObject {
             } catch {
                 let duration = Date().timeIntervalSince(startTime)
                 
+                // Log detailed error for debugging
+                print("❌ Model test failed for \(model.rawValue): \(error)")
+                
+                // Try fallback if available
+                let fallbackModel: GeminiModel? = {
+                    switch model {
+                    case .flash1_5: return .flash1_5_base
+                    case .pro1_5: return .pro1_5_base
+                    default: return nil
+                    }
+                }()
+                
+                if let fallback = fallbackModel {
+                    print("🔄 Trying fallback model: \(fallback.rawValue)")
+                    let fallbackService = GeminiAPIService(
+                        apiKey: apiKey,
+                        model: fallback,
+                        promptStrategy: selectedPrompt
+                    )
+                    
+                    do {
+                        let translation = try await fallbackService.translateImage(
+                            frame,
+                            sourceLang: sourceLang,
+                            targetLang: targetLang
+                        )
+                        
+                        let finalDuration = Date().timeIntervalSince(startTime)
+                        
+                        let result = TestResult(
+                            timestamp: Date(),
+                            testType: .modelComparison,
+                            translation: translation,
+                            model: "\(model.displayName) (fallback)",
+                            promptStrategy: selectedPrompt.displayName,
+                            duration: finalDuration,
+                            isSuccess: true,
+                            error: nil
+                        )
+                        
+                        testResults.insert(result, at: 0)
+                        continue
+                    } catch {
+                        print("❌ Fallback also failed: \(error)")
+                    }
+                }
+                
+                let errorDescription: String
+                if let geminiError = error as? GeminiTranslationError {
+                    errorDescription = geminiError.localizedDescription
+                } else {
+                    errorDescription = error.localizedDescription
+                }
+                
                 let result = TestResult(
                     timestamp: Date(),
                     testType: .modelComparison,
-                    translation: "Error: \(error.localizedDescription)",
+                    translation: "Error: \(errorDescription)",
                     model: model.displayName,
                     promptStrategy: selectedPrompt.displayName,
                     duration: duration,
                     isSuccess: false,
-                    error: error.localizedDescription
+                    error: errorDescription
                 )
                 
                 testResults.insert(result, at: 0)
@@ -347,6 +414,33 @@ class ModelTestingViewModel: ObservableObject {
     
     func clearResults() {
         testResults.removeAll()
+    }
+    
+    /// Test which models are available with the current API key
+    func testModelAvailability() async {
+        isTesting = true
+        defer { isTesting = false }
+        
+        let allModels: [GeminiModel] = [.flash2_0, .flash1_5, .flash1_5_base, .pro1_5, .pro1_5_base]
+        
+        for model in allModels {
+            let service = GeminiAPIService(apiKey: apiKey, model: model, promptStrategy: .concise)
+            
+            // Create a simple test image (1x1 white pixel)
+            let size = CGSize(width: 1, height: 1)
+            UIGraphicsBeginImageContext(size)
+            UIColor.white.setFill()
+            UIRectFill(CGRect(origin: .zero, size: size))
+            let testImage = UIGraphicsGetImageFromCurrentImageContext()!
+            UIGraphicsEndImageContext()
+            
+            do {
+                _ = try await service.translateImage(testImage, sourceLang: "English", targetLang: "English")
+                print("✅ Model available: \(model.rawValue)")
+            } catch {
+                print("❌ Model unavailable: \(model.rawValue) - \(error.localizedDescription)")
+            }
+        }
     }
     
     // MARK: - Analysis Helpers

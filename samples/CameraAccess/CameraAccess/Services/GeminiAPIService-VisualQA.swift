@@ -96,7 +96,7 @@ extension GeminiAPIService {
                 throw GeminiTranslationError.noContent
             }
             
-            return text.trimmingCharacters(in: .whitespacesAndNewlines)
+            return text.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
             
         } catch let error as GeminiTranslationError {
             throw error
@@ -243,7 +243,7 @@ extension GeminiAPIService {
             throw GeminiTranslationError.noContent
         }
         
-        return text.trimmingCharacters(in: .whitespacesAndNewlines)
+        return text.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
     }
 }
 

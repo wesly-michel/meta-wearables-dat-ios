@@ -78,12 +78,13 @@ enum PromptStrategy: String {
 }
 
 class GeminiAPIService {
-    private let apiKey: String
+    // CHANGED FROM PRIVATE TO INTERNAL - Extensions in separate files need access
+    internal let apiKey: String
     private var model: GeminiModel
     private var promptStrategy: PromptStrategy
     
-    // Image compression quality (0.0-1.0)
-    private let imageCompressionQuality: CGFloat = 0.7
+    // CHANGED FROM PRIVATE TO INTERNAL - Extensions in separate files need access
+    internal let imageCompressionQuality: CGFloat = 0.7
     
     // Generation config
     private var temperature: Double = 0.1  // Lower = more consistent (was 0.2)
@@ -94,6 +95,13 @@ class GeminiAPIService {
         self.apiKey = apiKey
         self.model = model
         self.promptStrategy = promptStrategy
+    }
+    
+    // MARK: - Computed Properties
+    
+    /// Endpoint URL for Gemini API - Used by extensions in separate files
+    internal var endpoint: String {
+        return "https://generativelanguage.googleapis.com/v1beta/models/\(model.rawValue):generateContent?key=\(apiKey)"
     }
     
     // MARK: - Model Selection
@@ -165,8 +173,7 @@ class GeminiAPIService {
             ]
         ]
         
-        // Make HTTP request
-        let endpoint = "https://generativelanguage.googleapis.com/v1beta/models/\(model.rawValue):generateContent?key=\(apiKey)"
+        // Make HTTP request - Uses computed endpoint property
         guard let url = URL(string: endpoint) else {
             throw GeminiTranslationError.apiError("Invalid endpoint URL")
         }

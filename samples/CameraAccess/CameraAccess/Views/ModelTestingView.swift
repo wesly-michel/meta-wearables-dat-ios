@@ -307,24 +307,34 @@ struct TestingSettingsView: View {
                 }
                 
                 Section("Testing") {
+                    // Streaming status display
+                    HStack {
+                        Text("Stream Status")
+                        Spacer()
+                        if viewModel.isStreaming {
+                            Label("Active", systemImage: "checkmark.circle.fill")
+                                .foregroundColor(.green)
+                        } else if viewModel.hasActiveDevice {
+                            Label("Starting...", systemImage: "clock.fill")
+                                .foregroundColor(.orange)
+                        } else {
+                            Label("No Device", systemImage: "xmark.circle.fill")
+                                .foregroundColor(.red)
+                        }
+                    }
+                    .font(.caption)
+                    
+                    Button("Test Model Availability") {
+                        Task {
+                            await viewModel.testModelAvailability()
+                        }
+                    }
+                    .disabled(viewModel.isTesting)
+                    
                     Button("Clear Results") {
                         viewModel.clearResults()
                     }
                     .foregroundColor(.red)
-                    
-                    Button("Start Streaming") {
-                        Task {
-                            await viewModel.startSession()
-                        }
-                    }
-                    .disabled(viewModel.isStreaming)
-                    
-                    Button("Stop Streaming") {
-                        Task {
-                            await viewModel.stopSession()
-                        }
-                    }
-                    .disabled(!viewModel.isStreaming)
                 }
             }
             .navigationTitle("Testing Settings")
