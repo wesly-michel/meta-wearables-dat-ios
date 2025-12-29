@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7B50CED12F02F8B600516931 /* LLMManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B50CED02F02F8B600516931 /* LLMManager.swift */; };
+		7B50CED32F02F94D00516931 /* ContinuousListeningService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B50CED22F02F94D00516931 /* ContinuousListeningService.swift */; };
+		7B50CED52F02F98800516931 /* OpenAIRealtimeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B50CED42F02F98800516931 /* OpenAIRealtimeService.swift */; };
 		7B9F89A52EF6D5A800D631F2 /* TranslationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F89A42EF6D5A800D631F2 /* TranslationViewModel.swift */; };
 		7B9F89AD2EF6DC8100D631F2 /* CameraTranslationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F89AC2EF6DC8100D631F2 /* CameraTranslationView.swift */; };
 		7B9F89B82EF6E28E00D631F2 /* GeminiAPIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F89B52EF6E28E00D631F2 /* GeminiAPIService.swift */; };
@@ -21,6 +24,8 @@
 		7B9F89DD2F013C4800D631F2 /* SceneContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F89DC2F013C4800D631F2 /* SceneContextManager.swift */; };
 		7B9F89DF2F013C8700D631F2 /* ContinuousVisionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F89DE2F013C8700D631F2 /* ContinuousVisionViewModel.swift */; };
 		7B9F89E12F013CAA00D631F2 /* ContinuousVisionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F89E02F013CAA00D631F2 /* ContinuousVisionView.swift */; };
+		7B9F89E32F0265A000D631F2 /* ContinuousListeningService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F89E22F0265A000D631F2 /* ContinuousListeningService.swift */; };
+		7B9F89E42F029A0000D631F2 /* OpenAIRealtimeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B9F89E52F029A0000D631F2 /* OpenAIRealtimeService.swift */; };
 		8F2D23802E856711002D0588 /* DebugMenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2D237F2E856711002D0588 /* DebugMenuViewModel.swift */; };
 		8F8F00782E8ACB4600A4BDAF /* WearablesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F8F00772E8ACB4500A4BDAF /* WearablesViewModel.swift */; };
 		8FD96B7F2E6F0A9800F56AB1 /* CameraAccessApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FD96B792E6F0A9800F56AB1 /* CameraAccessApp.swift */; };
@@ -75,6 +80,9 @@
 
 /* Begin PBXFileReference section */
 		3A3A3A3A3A3A3A3A3A3A3A3A /* CameraAccess.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CameraAccess.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7B50CED02F02F8B600516931 /* LLMManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMManager.swift; sourceTree = "<group>"; };
+		7B50CED22F02F94D00516931 /* ContinuousListeningService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinuousListeningService.swift; sourceTree = "<group>"; };
+		7B50CED42F02F98800516931 /* OpenAIRealtimeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAIRealtimeService.swift; sourceTree = "<group>"; };
 		7B9F89A42EF6D5A800D631F2 /* TranslationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslationViewModel.swift; sourceTree = "<group>"; };
 		7B9F89AC2EF6DC8100D631F2 /* CameraTranslationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraTranslationView.swift; sourceTree = "<group>"; };
 		7B9F89B32EF6E28E00D631F2 /* ClaudeAPIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeAPIService.swift; sourceTree = "<group>"; };
@@ -89,6 +97,8 @@
 		7B9F89DC2F013C4800D631F2 /* SceneContextManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneContextManager.swift; sourceTree = "<group>"; };
 		7B9F89DE2F013C8700D631F2 /* ContinuousVisionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinuousVisionViewModel.swift; sourceTree = "<group>"; };
 		7B9F89E02F013CAA00D631F2 /* ContinuousVisionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinuousVisionView.swift; sourceTree = "<group>"; };
+		7B9F89E22F0265A000D631F2 /* ContinuousListeningService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContinuousListeningService.swift; path = CameraAccess/Services/ContinuousListeningService.swift; sourceTree = SOURCE_ROOT; };
+		7B9F89E52F029A0000D631F2 /* OpenAIRealtimeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenAIRealtimeService.swift; sourceTree = "<group>"; };
 		8F2D237F2E856711002D0588 /* DebugMenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugMenuViewModel.swift; sourceTree = "<group>"; };
 		8F8F00772E8ACB4500A4BDAF /* WearablesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WearablesViewModel.swift; sourceTree = "<group>"; };
 		8FD96B6F2E6F0A9800F56AB1 /* StreamSessionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamSessionViewModel.swift; sourceTree = "<group>"; };
@@ -159,6 +169,11 @@
 		7B9F89B72EF6E28E00D631F2 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				7B50CED42F02F98800516931 /* OpenAIRealtimeService.swift */,
+				7B50CED22F02F94D00516931 /* ContinuousListeningService.swift */,
+				7B50CED02F02F8B600516931 /* LLMManager.swift */,
+				7B9F89E52F029A0000D631F2 /* OpenAIRealtimeService.swift */,
+				7B9F89E22F0265A000D631F2 /* ContinuousListeningService.swift */,
 				7B9F89D42F013BA000D631F2 /* VoiceQueryService.swift */,
 				7B9F89B32EF6E28E00D631F2 /* ClaudeAPIService.swift */,
 				7B9F89B42EF6E28E00D631F2 /* FrameThrottler.swift */,
@@ -389,8 +404,10 @@
 				7B9F89D62F013BA000D631F2 /* VoiceQueryService.swift in Sources */,
 				8F2D23802E856711002D0588 /* DebugMenuViewModel.swift in Sources */,
 				7B9F89E12F013CAA00D631F2 /* ContinuousVisionView.swift in Sources */,
+				7B9F89E32F0265A000D631F2 /* ContinuousListeningService.swift in Sources */,
 				8FFD60542E849D0D0035E446 /* RegistrationView.swift in Sources */,
 				8FFD60342E8434070035E446 /* MediaPickerView.swift in Sources */,
+				7B50CED12F02F8B600516931 /* LLMManager.swift in Sources */,
 				8FFD60352E8434070035E446 /* StatusText.swift in Sources */,
 				8FFD602C2E8433E20035E446 /* MockDeviceKitViewModel.swift in Sources */,
 				8FFD602D2E8433E20035E446 /* MockDeviceViewModel.swift in Sources */,
@@ -406,12 +423,14 @@
 				8FFD60612E84A2F70035E446 /* DebugMenuView.swift in Sources */,
 				8FD96B8A2E6F0A9800F56AB1 /* PhotoPreviewView.swift in Sources */,
 				E66D30242E7DA71900470B48 /* MockDeviceKitButton.swift in Sources */,
+				7B50CED32F02F94D00516931 /* ContinuousListeningService.swift in Sources */,
 				8F8F00782E8ACB4600A4BDAF /* WearablesViewModel.swift in Sources */,
 				E6A188482EB918740097D0E1 /* StreamView.swift in Sources */,
 				7B9F89B82EF6E28E00D631F2 /* GeminiAPIService.swift in Sources */,
 				7B9F89B92EF6E28E00D631F2 /* FrameThrottler.swift in Sources */,
 				7B9F89BA2EF6E28E00D631F2 /* TTSService.swift in Sources */,
 				7B9F89BB2EF6E28E00D631F2 /* ClaudeAPIService.swift in Sources */,
+				7B50CED52F02F98800516931 /* OpenAIRealtimeService.swift in Sources */,
 				8FFD5FF52E8422580035E446 /* CircleButton.swift in Sources */,
 				7B9F89DB2F013C3300D631F2 /* VoiceActivationDetector.swift in Sources */,
 				7B9F89D92F013C1400D631F2 /* GeminiAPIService-VisualQA.swift in Sources */,
@@ -420,6 +439,7 @@
 				E6FD3BCE2EB4D53A00E7FE5D /* NonStreamView.swift in Sources */,
 				7B9F89DD2F013C4800D631F2 /* SceneContextManager.swift in Sources */,
 				7B9F89AD2EF6DC8100D631F2 /* CameraTranslationView.swift in Sources */,
+				7B9F89E42F029A0000D631F2 /* OpenAIRealtimeService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -20,8 +20,10 @@ class SceneContextManager {
     private actor UpdateState {
         var lastUpdateTime: Date?
         var isUpdating = false
+        var isPaused = false  // Pause updates during query processing
 
         func shouldUpdate(interval: TimeInterval) -> Bool {
+            if isPaused { return false }  // Don't update when paused
             if isUpdating { return false }
             if let lastUpdate = lastUpdateTime {
                 if Date().timeIntervalSince(lastUpdate) < interval {
@@ -40,6 +42,16 @@ class SceneContextManager {
         func reset() {
             lastUpdateTime = nil
             isUpdating = false
+        }
+
+        func pause() {
+            isPaused = true
+            print("⏸️ SceneContextManager: Paused")
+        }
+
+        func resume() {
+            isPaused = false
+            print("▶️ SceneContextManager: Resumed")
         }
     }
 
@@ -251,6 +263,16 @@ class SceneContextManager {
 
     func resetUpdateTimer() {
         Task { await updateState.reset() }
+    }
+
+    /// Pause scene updates (during query processing to avoid redundant API calls)
+    func pauseUpdates() {
+        Task { await updateState.pause() }
+    }
+
+    /// Resume scene updates
+    func resumeUpdates() {
+        Task { await updateState.resume() }
     }
     
     // MARK: - Image Processing

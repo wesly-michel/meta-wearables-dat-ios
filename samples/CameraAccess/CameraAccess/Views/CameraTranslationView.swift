@@ -229,195 +229,230 @@ struct CameraTranslationView: View {
 struct SettingsView: View {
     @ObservedObject var viewModel: TranslationViewModel
     @Environment(\.dismiss) var dismiss
-    
-    @State private var apiKey: String = ""
-    @State private var showApiKey: Bool = false  // NEW: Toggle for showing/hiding key
+
+    // API Keys
+    @State private var geminiAPIKey: String = ""
+    @State private var openAIAPIKey: String = ""
+    @State private var claudeAPIKey: String = ""
+    @State private var showAPIKeys: Bool = false
+    @State private var showSaveConfirmation: Bool = false
+
+    // Languages
     @State private var sourceLang: String = "Thai"
     @State private var targetLang: String = "English"
-    @State private var showSaveConfirmation: Bool = false  // NEW: Confirmation feedback
-    
+
+    // Provider selection
+    @State private var primaryProvider: LLMProvider = .gemini
+
     let languages = ["English", "Thai", "Japanese", "Chinese", "Korean", "Spanish", "French", "German"]
-    
+
     var body: some View {
         NavigationView {
             Form {
-                Section("API Configuration") {
-                    // API Key input with show/hide toggle
-                    HStack {
-                        if showApiKey {
-                            TextField("Gemini API Key", text: $apiKey)
-                                .autocapitalization(.none)
-                                .autocorrectionDisabled()
-                                .textContentType(.password)
-                        } else {
-                            SecureField("Gemini API Key", text: $apiKey)
-                                .autocapitalization(.none)
-                                .autocorrectionDisabled()
-                        }
-                        
-                        Button(action: {
-                            showApiKey.toggle()
-                        }) {
-                            Image(systemName: showApiKey ? "eye.slash.fill" : "eye.fill")
-                                .foregroundColor(.blue)
+                // MARK: - Provider Selection
+                Section {
+                    Picker("Primary Provider", selection: $primaryProvider) {
+                        ForEach(LLMProvider.allCases) { provider in
+                            HStack {
+                                Text(provider.displayName)
+                                if hasAPIKey(for: provider) {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundColor(.green)
+                                        .font(.caption)
+                                }
+                            }
+                            .tag(provider)
                         }
                     }
-                    
-                    // Save button with confirmation
-                    Button("Save API Key") {
-                        let trimmedKey = apiKey.trimmingCharacters(in: .whitespacesAndNewlines)
-                        UserDefaults.standard.set(trimmedKey, forKey: "geminiAPIKey")
-                        showSaveConfirmation = true
-                        
-                        // Hide confirmation after 2 seconds
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                            showSaveConfirmation = false
-                        }
-                    }
-                    .disabled(apiKey.isEmpty)
-                    
-                    if showSaveConfirmation {
-                        Text("✅ API Key saved successfully!")
+
+                    Text(primaryProvider.description)
+                        .font(.caption)
+                        .foregroundColor(.gray)
+
+                    if primaryProvider == .openAIRealtime {
+                        Label("Sub-second latency with built-in STT/TTS", systemImage: "bolt.fill")
                             .font(.caption)
                             .foregroundColor(.green)
                     }
-                    
-                    // Display saved key for verification
-                    if !apiKey.isEmpty {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Current Key:")
-                                .font(.caption)
-                                .foregroundColor(.gray)
-                            
-                            if showApiKey {
-                                Text(apiKey)
-                                    .font(.system(size: 10, design: .monospaced))
-                                    .foregroundColor(.blue)
-                                    .textSelection(.enabled)
-                            } else {
-                                Text(String(repeating: "•", count: min(apiKey.count, 40)))
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
-                            }
-                            
-                            // Show key info
-                            HStack {
-                                Text("Length: \(apiKey.count) characters")
-                                    .font(.caption2)
-                                    .foregroundColor(.gray)
-                                
-                                if apiKey.hasPrefix("AIza") {
-                                    Text("✅ Valid format")
-                                        .font(.caption2)
-                                        .foregroundColor(.green)
-                                } else {
-                                    Text("⚠️ Should start with 'AIza'")
-                                        .font(.caption2)
-                                        .foregroundColor(.orange)
-                                }
-                            }
+                } header: {
+                    Text("LLM Provider")
+                } footer: {
+                    Text("Other providers will be used as fallback if primary fails")
+                }
+
+                // MARK: - OpenAI Configuration
+                Section {
+                    APIKeyInputView(
+                        label: "OpenAI API Key",
+                        key: $openAIAPIKey,
+                        showKey: showAPIKeys,
+                        prefix: "sk-",
+                        placeholder: "sk-..."
+                    )
+
+                    Button("Save OpenAI Key") {
+                        saveAPIKey(openAIAPIKey, forKey: "openaiAPIKey")
+                    }
+                    .disabled(openAIAPIKey.isEmpty)
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Get your API key:")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                        Link("platform.openai.com/api-keys", destination: URL(string: "https://platform.openai.com/api-keys")!)
+                            .font(.caption)
+                        Text("⚡️ Realtime API: ~$0.06/min for voice")
+                            .font(.caption2)
+                            .foregroundColor(.blue)
+                    }
+                } header: {
+                    HStack {
+                        Text("OpenAI (Realtime)")
+                        Spacer()
+                        if hasAPIKey(for: .openAIRealtime) {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(.green)
                         }
                     }
-                    
+                }
+
+                // MARK: - Gemini Configuration
+                Section {
+                    APIKeyInputView(
+                        label: "Gemini API Key",
+                        key: $geminiAPIKey,
+                        showKey: showAPIKeys,
+                        prefix: "AIza",
+                        placeholder: "AIza..."
+                    )
+
+                    Button("Save Gemini Key") {
+                        saveAPIKey(geminiAPIKey, forKey: "geminiAPIKey")
+                    }
+                    .disabled(geminiAPIKey.isEmpty)
+
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Get your FREE API key:")
                             .font(.caption)
                             .foregroundColor(.gray)
-                        
                         Link("aistudio.google.com/apikey", destination: URL(string: "https://aistudio.google.com/apikey")!)
                             .font(.caption)
-                        
-                        Text("💰 Gemini 2.0 Flash: ~$2-5/month vs Claude's $81-126/month")
+                        Text("💰 Flash 2.5: ~$2-5/month for vision")
                             .font(.caption2)
                             .foregroundColor(.green)
-                            .padding(.top, 4)
+                    }
+                } header: {
+                    HStack {
+                        Text("Gemini (Vision)")
+                        Spacer()
+                        if hasAPIKey(for: .gemini) {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(.green)
+                        }
                     }
                 }
-                
+
+                // MARK: - Claude Configuration (Optional)
+                Section {
+                    APIKeyInputView(
+                        label: "Claude API Key",
+                        key: $claudeAPIKey,
+                        showKey: showAPIKeys,
+                        prefix: "sk-ant-",
+                        placeholder: "sk-ant-..."
+                    )
+
+                    Button("Save Claude Key") {
+                        saveAPIKey(claudeAPIKey, forKey: "claudeAPIKey")
+                    }
+                    .disabled(claudeAPIKey.isEmpty)
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Get your API key:")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                        Link("console.anthropic.com", destination: URL(string: "https://console.anthropic.com/")!)
+                            .font(.caption)
+                    }
+                } header: {
+                    HStack {
+                        Text("Claude (Fallback)")
+                        Spacer()
+                        if hasAPIKey(for: .claude) {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundColor(.green)
+                        }
+                    }
+                }
+
+                // MARK: - Show/Hide Keys Toggle
+                Section {
+                    Toggle("Show API Keys", isOn: $showAPIKeys)
+                }
+
+                // MARK: - Languages
                 Section("Languages") {
                     Picker("From", selection: $sourceLang) {
                         ForEach(languages, id: \.self) { lang in
                             Text(lang).tag(lang)
                         }
                     }
-                    
+
                     Picker("To", selection: $targetLang) {
                         ForEach(languages, id: \.self) { lang in
                             Text(lang).tag(lang)
                         }
                     }
-                    
+
                     Button("Apply") {
                         viewModel.setLanguages(source: sourceLang, target: targetLang)
                     }
                 }
-                
+
+                // MARK: - History
                 Section("Translation History") {
                     Text("\(viewModel.translationHistory.count) translations saved")
                         .foregroundColor(.gray)
-                    
+
                     Button("Clear History", role: .destructive) {
                         viewModel.clearHistory()
                     }
                 }
-                
-                Section("Debug Info") {
-                    // Show what's actually saved in UserDefaults
-                    if let savedKey = UserDefaults.standard.string(forKey: "geminiAPIKey") {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Saved in UserDefaults:")
-                                .font(.caption)
-                                .foregroundColor(.gray)
-                            
-                            if showApiKey {
-                                Text(savedKey)
-                                    .font(.system(size: 10, design: .monospaced))
+
+                // MARK: - Provider Status
+                Section("Provider Status") {
+                    ForEach(LLMProvider.allCases) { provider in
+                        HStack {
+                            Text(provider.displayName)
+                            Spacer()
+                            if hasAPIKey(for: provider) {
+                                Label("Ready", systemImage: "checkmark.circle.fill")
+                                    .font(.caption)
                                     .foregroundColor(.green)
-                                    .textSelection(.enabled)
                             } else {
-                                Text(String(repeating: "•", count: min(savedKey.count, 40)))
+                                Label("No Key", systemImage: "xmark.circle")
                                     .font(.caption)
                                     .foregroundColor(.gray)
                             }
-                            
-                            HStack {
-                                Text("Saved length: \(savedKey.count)")
-                                    .font(.caption2)
-                                    .foregroundColor(.gray)
-                                
-                                if savedKey.hasPrefix("AIza") {
-                                    Text("✅")
-                                        .font(.caption2)
-                                } else {
-                                    Text("❌ Wrong format")
-                                        .font(.caption2)
-                                        .foregroundColor(.red)
-                                }
-                            }
                         }
-                    } else {
-                        Text("No API key saved yet")
-                            .font(.caption)
-                            .foregroundColor(.orange)
                     }
                 }
-                
+
+                // MARK: - About
                 Section("About") {
                     HStack {
                         Text("Version")
                         Spacer()
-                        Text("1.0.0 (Gemini)")
+                        Text("2.0.0 (Multi-Provider)")
                             .foregroundColor(.gray)
                     }
-                    
+
                     HStack {
-                        Text("AI Model")
+                        Text("Primary Model")
                         Spacer()
-                        Text("Gemini 2.0 Flash")
-                            .foregroundColor(.green)
+                        Text(primaryProvider.displayName)
+                            .foregroundColor(.blue)
                     }
-                    
-                    Link("Gemini API Docs", destination: URL(string: "https://ai.google.dev/gemini-api/docs")!)
                 }
             }
             .navigationTitle("Settings")
@@ -425,16 +460,96 @@ struct SettingsView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Done") {
+                        // Save provider preference
+                        UserDefaults.standard.set(primaryProvider.rawValue, forKey: "primaryLLMProvider")
                         dismiss()
                     }
                 }
             }
+            .alert("Saved", isPresented: $showSaveConfirmation) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("API Key saved successfully!")
+            }
         }
         .onAppear {
-            // Load from UserDefaults
-            apiKey = UserDefaults.standard.string(forKey: "geminiAPIKey") ?? ""
-            sourceLang = viewModel.sourceLang
-            targetLang = viewModel.targetLang
+            loadSettings()
+        }
+    }
+
+    // MARK: - Helpers
+
+    private func loadSettings() {
+        geminiAPIKey = UserDefaults.standard.string(forKey: "geminiAPIKey") ?? ""
+        openAIAPIKey = UserDefaults.standard.string(forKey: "openaiAPIKey") ?? ""
+        claudeAPIKey = UserDefaults.standard.string(forKey: "claudeAPIKey") ?? ""
+        sourceLang = viewModel.sourceLang
+        targetLang = viewModel.targetLang
+
+        if let savedProvider = UserDefaults.standard.string(forKey: "primaryLLMProvider"),
+           let provider = LLMProvider(rawValue: savedProvider) {
+            primaryProvider = provider
+        }
+    }
+
+    private func saveAPIKey(_ key: String, forKey userDefaultsKey: String) {
+        let trimmedKey = key.trimmingCharacters(in: .whitespacesAndNewlines)
+        UserDefaults.standard.set(trimmedKey, forKey: userDefaultsKey)
+        showSaveConfirmation = true
+    }
+
+    private func hasAPIKey(for provider: LLMProvider) -> Bool {
+        switch provider {
+        case .openAIRealtime:
+            return !openAIAPIKey.isEmpty || UserDefaults.standard.string(forKey: "openaiAPIKey")?.isEmpty == false
+        case .gemini:
+            return !geminiAPIKey.isEmpty || UserDefaults.standard.string(forKey: "geminiAPIKey")?.isEmpty == false
+        case .claude:
+            return !claudeAPIKey.isEmpty || UserDefaults.standard.string(forKey: "claudeAPIKey")?.isEmpty == false
+        }
+    }
+}
+
+// MARK: - API Key Input View
+
+struct APIKeyInputView: View {
+    let label: String
+    @Binding var key: String
+    let showKey: Bool
+    let prefix: String
+    let placeholder: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            if showKey {
+                TextField(label, text: $key)
+                    .autocapitalization(.none)
+                    .autocorrectionDisabled()
+                    .textContentType(.password)
+                    .font(.system(size: 14, design: .monospaced))
+            } else {
+                SecureField(label, text: $key)
+                    .autocapitalization(.none)
+                    .autocorrectionDisabled()
+            }
+
+            if !key.isEmpty {
+                HStack {
+                    Text("Length: \(key.count)")
+                        .font(.caption2)
+                        .foregroundColor(.gray)
+
+                    if key.hasPrefix(prefix) {
+                        Text("✅ Valid format")
+                            .font(.caption2)
+                            .foregroundColor(.green)
+                    } else {
+                        Text("⚠️ Should start with '\(prefix)'")
+                            .font(.caption2)
+                            .foregroundColor(.orange)
+                    }
+                }
+            }
         }
     }
 }

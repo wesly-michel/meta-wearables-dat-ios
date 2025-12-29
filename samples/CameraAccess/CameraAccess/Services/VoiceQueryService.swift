@@ -22,6 +22,7 @@ class VoiceQueryService: NSObject {
 
     private var isListening = false
     private var currentTranscription = ""
+    private var hasSentFinalTranscription = false  // Prevents duplicate final callbacks
 
     // Silence detection - finalize if no new transcription for this duration
     private let silenceTimeout: TimeInterval = 2.0  // 2 seconds of no new words = done speaking
@@ -101,7 +102,7 @@ class VoiceQueryService: NSObject {
 
         // Only configure if not already active (fallback)
         if !audioSession.isOtherAudioPlaying {
-            try audioSession.setCategory(.playAndRecord, mode: .default, options: [.allowBluetooth, .defaultToSpeaker])
+            try audioSession.setCategory(.playAndRecord, mode: .default, options: [.allowBluetoothHFP, .defaultToSpeaker])
             try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
         }
 
@@ -142,7 +143,7 @@ class VoiceQueryService: NSObject {
                     let hasNewContent = transcription.count > self.currentTranscription.count
                     self.currentTranscription = transcription
 
-                    // Send partial results
+                    // Send partial results (always)
                     self.onPartialTranscription?(transcription)
 
                     // Log partial results for debugging
@@ -157,8 +158,10 @@ class VoiceQueryService: NSObject {
                     }
 
                     // Check if final (iOS decided speech ended)
-                    if result.isFinal {
+                    // Only send if we haven't already sent a final transcription
+                    if result.isFinal && !self.hasSentFinalTranscription {
                         self.silenceTimer?.cancel()
+                        self.hasSentFinalTranscription = true
                         print("✅ Final transcription (iOS): \(transcription)")
                         self.onFinalTranscription?(transcription)
                         Task {
@@ -170,10 +173,17 @@ class VoiceQueryService: NSObject {
                 if let error = error {
                     self.silenceTimer?.cancel()
                     let nsError = error as NSError
+
+                    // Only handle errors if we haven't already sent a final transcription
+                    guard !self.hasSentFinalTranscription else {
+                        print("ℹ️ Ignoring error - already sent final transcription")
+                        return
+                    }
+
                     // Ignore "No speech detected" errors - just return empty and let VAD restart
                     if nsError.domain == "kAFAssistantErrorDomain" && nsError.code == 1110 {
                         print("ℹ️ No speech detected - returning to listening mode")
-                        // Call final transcription with empty string to signal completion
+                        self.hasSentFinalTranscription = true
                         self.onFinalTranscription?("")
                     } else {
                         print("⚠️ Recognition error: \(error.localizedDescription)")
@@ -222,6 +232,7 @@ class VoiceQueryService: NSObject {
 
         isListening = true
         currentTranscription = ""
+        hasSentFinalTranscription = false  // Reset for new listening session
 
         print("🎤 Started listening for voice query")
     }
@@ -263,10 +274,14 @@ class VoiceQueryService: NSObject {
 
                 guard let self = self, self.isListening else { break }
 
+                // Don't finalize if we already sent a final transcription
+                guard !self.hasSentFinalTranscription else { break }
+
                 if let lastTime = self.lastTranscriptionTime {
                     let elapsed = Date().timeIntervalSince(lastTime)
                     if elapsed >= self.silenceTimeout {
                         // Silence timeout - finalize what we have
+                        self.hasSentFinalTranscription = true
                         if !self.currentTranscription.isEmpty {
                             print("⏱️ Silence timeout - finalizing: '\(self.currentTranscription)'")
                             self.onFinalTranscription?(self.currentTranscription)

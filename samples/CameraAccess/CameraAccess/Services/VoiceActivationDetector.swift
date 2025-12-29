@@ -37,9 +37,9 @@ class VoiceActivationDetector {
         guard !isMonitoring else { return }
 
         // Configure audio session for HFP (two-way voice) with Ray-Ban glasses
-        // Uses .allowBluetooth for HFP profile (microphone + speaker) per Meta docs
+        // Uses .allowBluetoothHFP for HFP profile (microphone + speaker) per Meta docs
         let audioSession = AVAudioSession.sharedInstance()
-        try audioSession.setCategory(.playAndRecord, mode: .default, options: [.allowBluetooth, .defaultToSpeaker])
+        try audioSession.setCategory(.playAndRecord, mode: .default, options: [.allowBluetoothHFP, .defaultToSpeaker])
         try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
 
         // Log current audio route for debugging
