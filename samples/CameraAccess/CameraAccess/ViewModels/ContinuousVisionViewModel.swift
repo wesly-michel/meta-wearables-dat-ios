@@ -234,8 +234,9 @@ class ContinuousVisionViewModel: ObservableObject {
                         await self.sceneManager.updateSceneContext(from: image)
                     }
 
-                    // Update OpenAI with current frame every 2 seconds (~48 frames at 24fps)
-                    if frameCount % 48 == 0 {
+                    // Update OpenAI with current frame every 1 second (~24 frames at 24fps)
+                    // More frequent updates ensure fresh visual context for voice queries
+                    if frameCount % 24 == 0 {
                         self.openAIService?.updateCurrentImage(image)
                     }
                 }
@@ -249,11 +250,33 @@ class ContinuousVisionViewModel: ObservableObject {
         }
     }
     
+    // MARK: - Service Reinitialization
+
+    /// Reinitialize OpenAI service if API key was added after ViewModel creation
+    private func ensureOpenAIServiceInitialized() -> Bool {
+        // If already initialized, we're good
+        if openAIService != nil {
+            return true
+        }
+
+        // Try to load API key from UserDefaults (in case it was added later)
+        let openAIKey = UserDefaults.standard.string(forKey: "openaiAPIKey") ?? ""
+        if !openAIKey.isEmpty {
+            self.openAIService = OpenAIRealtimeService(apiKey: openAIKey, voice: .alloy)
+            setupOpenAICallbacks()
+            print("✅ OpenAI service initialized with newly added API key")
+            return true
+        }
+
+        return false
+    }
+
     // MARK: - Continuous Vision Control
 
     func startContinuousVision() async {
-        guard let openAIService = openAIService else {
-            showErrorMessage("OpenAI API key not configured. Please add it in Settings.")
+        // Try to initialize OpenAI service if not already done
+        guard ensureOpenAIServiceInitialized(), let openAIService = openAIService else {
+            showErrorMessage("OpenAI API key not configured. Please add it in Settings (Translation tab).")
             return
         }
 

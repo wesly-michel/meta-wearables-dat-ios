@@ -439,6 +439,10 @@ class OpenAIRealtimeService: NSObject {
 
         case "input_audio_buffer.speech_stopped":
             print("🎤 Speech stopped")
+            // When speech ends, inject current image context for visual Q&A
+            Task {
+                await self.injectImageContext()
+            }
 
         case "conversation.item.input_audio_transcription.completed":
             if let transcript = event["transcript"] as? String {
@@ -490,6 +494,47 @@ class OpenAIRealtimeService: NSObject {
         default:
             // Ignore other events
             break
+        }
+    }
+
+    // MARK: - Image Context Injection
+
+    /// Injects the current image into the conversation for visual Q&A
+    /// Called when speech stops, before OpenAI generates a response
+    private func injectImageContext() async {
+        guard let imageBase64 = currentImageBase64, !imageBase64.isEmpty else {
+            print("📷 No image context available")
+            return
+        }
+
+        print("📷 Injecting image context for visual Q&A...")
+
+        // Add image as a system/context message
+        let imageItem: [String: Any] = [
+            "type": "conversation.item.create",
+            "item": [
+                "type": "message",
+                "role": "user",
+                "content": [
+                    [
+                        "type": "input_image",
+                        "image_url": [
+                            "url": "data:image/jpeg;base64,\(imageBase64)"
+                        ]
+                    ],
+                    [
+                        "type": "input_text",
+                        "text": "[This is what I'm currently looking at through my Ray-Ban glasses camera]"
+                    ]
+                ]
+            ]
+        ]
+
+        do {
+            try await sendMessage(imageItem)
+            print("✅ Image context injected")
+        } catch {
+            print("⚠️ Failed to inject image context: \(error)")
         }
     }
 
