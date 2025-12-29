@@ -42,30 +42,37 @@ enum GeminiTranslationError: Error {
 }
 
 // FIXED: Added fallback model cases for when -latest versions don't work
+// UPDATED: Current Gemini models (2024-2025) - Gemini 1.5 retired April 29, 2025
 enum GeminiModel: String, CaseIterable {
-    case flash2_0 = "gemini-2.0-flash-exp"           // Latest, fastest
-    case flash1_5 = "gemini-1.5-flash-latest"        // Stable with -latest suffix
-    case pro1_5 = "gemini-1.5-pro-latest"            // Higher quality with -latest suffix
+    // Gemini 2.0 models
+    case flash2_0 = "gemini-2.0-flash-exp"              // Experimental
     
-    // Fallback models (without -latest) - used by ModelTestingViewModel
-    case flash1_5_base = "gemini-1.5-flash"
-    case pro1_5_base = "gemini-1.5-pro"
+    // Gemini 2.5 models (CURRENT, GA - Use these!)
+    case flash2_5 = "gemini-2.5-flash"                  // ⭐ Best price-performance
+    case flashLite2_5 = "gemini-2.5-flash-lite"         // Fastest, cost-efficient  
+    case pro2_5 = "gemini-2.5-pro"                      // Most advanced reasoning
+    
+    // Legacy fallbacks
+    case flash2_0_001 = "gemini-2.0-flash-001"          // Versioned 2.0
+    case flashLite2_0 = "gemini-2.0-flash-lite"         // Lite 2.0
     
     var displayName: String {
         switch self {
-        case .flash2_0: return "Gemini 2.0 Flash (Fastest)"
-        case .flash1_5: return "Gemini 1.5 Flash (Latest)"
-        case .pro1_5: return "Gemini 1.5 Pro (Latest)"
-        case .flash1_5_base: return "Gemini 1.5 Flash (Base)"
-        case .pro1_5_base: return "Gemini 1.5 Pro (Base)"
+        case .flash2_0: return "Gemini 2.0 Flash (Experimental)"
+        case .flash2_5: return "Gemini 2.5 Flash ⭐"
+        case .flashLite2_5: return "Gemini 2.5 Flash Lite"
+        case .pro2_5: return "Gemini 2.5 Pro"
+        case .flash2_0_001: return "Gemini 2.0 Flash-001"
+        case .flashLite2_0: return "Gemini 2.0 Flash Lite"
         }
     }
     
     var costPerRequest: Double {
         switch self {
-        case .flash2_0: return 0.0001
-        case .flash1_5, .flash1_5_base: return 0.0002
-        case .pro1_5, .pro1_5_base: return 0.0010
+        case .flash2_0, .flash2_0_001: return 0.0001
+        case .flashLite2_5, .flashLite2_0: return 0.00005
+        case .flash2_5: return 0.0002
+        case .pro2_5: return 0.0010
         }
     }
 }
@@ -98,7 +105,7 @@ class GeminiAPIService {
     private var topP: Double = 0.9        // Slightly higher for better coverage
     private var topK: Int = 20            // Increased for more options
     
-    init(apiKey: String, model: GeminiModel = .flash2_0, promptStrategy: PromptStrategy = .detailed) {
+    init(apiKey: String, model: GeminiModel = .flash2_5, promptStrategy: PromptStrategy = .detailed) {
         self.apiKey = apiKey
         self.model = model
         self.promptStrategy = promptStrategy
@@ -346,7 +353,7 @@ extension GeminiAPIService {
         targetLang: String,
         apiKey: String
     ) async -> [(model: GeminiModel, result: Result<String, Error>)] {
-        let models: [GeminiModel] = [.flash2_0, .flash1_5, .pro1_5]
+        let models: [GeminiModel] = [.flash2_5, .flashLite2_5, .pro2_5]  // Updated to 2.5 models
         var results: [(GeminiModel, Result<String, Error>)] = []
         
         for model in models {
@@ -372,7 +379,7 @@ extension GeminiAPIService {
         sourceLang: String,
         targetLang: String,
         apiKey: String,
-        model: GeminiModel = .flash2_0
+        model: GeminiModel = .flash2_5  // Updated to 2.5 Flash
     ) async -> [(strategy: PromptStrategy, result: Result<String, Error>)] {
         let strategies: [PromptStrategy] = [.concise, .detailed, .structured]
         var results: [(PromptStrategy, Result<String, Error>)] = []

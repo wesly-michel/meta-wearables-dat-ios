@@ -67,7 +67,7 @@ class ModelTestingViewModel: ObservableObject {
     
     // Settings
     @Published var apiKey: String = ""
-    @Published var selectedModel: GeminiModel = .flash2_0
+    @Published var selectedModel: GeminiModel = .flash2_5  // Changed to 2.5 Flash (best price-performance)
     @Published var selectedPrompt: PromptStrategy = .detailed
     @Published var sourceLang: String = "Thai"
     @Published var targetLang: String = "English"
@@ -120,34 +120,56 @@ class ModelTestingViewModel: ObservableObject {
     
     // MARK: - Setup
     
+    private var frameCount = 0  // Track frames for logging
+    
     private func setupListeners() {
+        print("📡 Setting up video frame listener...")
         // Video frame listener
         videoFrameListenerToken = streamSession.videoFramePublisher.listen { [weak self] videoFrame in
             Task { @MainActor [weak self] in
                 guard let self = self else { return }
                 if let image = videoFrame.makeUIImage() {
+                    // Only log every 120th frame (every ~5 seconds at 24fps) to reduce console spam
+                    self.frameCount += 1
+                    if self.frameCount == 1 {
+                        print("📸 First video frame received! (size: \(image.size))")
+                    } else if self.frameCount % 120 == 0 {
+                        print("📹 Video stream active... (frames received: \(self.frameCount))")
+                    }
                     self.currentVideoFrame = image
+                } else {
+                    print("⚠️ Failed to convert video frame to UIImage")
                 }
             }
         }
+        print("✅ Video frame listener registered")
     }
     
     // MARK: - Session Control
     
     func startSession() async {
+        print("🎥 ModelTestingViewModel: Starting session...")
         let permission = Permission.camera
         do {
             let status = try await wearables.checkPermissionStatus(permission)
+            print("📷 Camera permission status: \(status)")
             if status == .granted {
+                print("✅ Permission granted, starting stream...")
                 await streamSession.start()
+                print("🎬 Stream state: \(streamSession.state)")
                 return
             }
+            print("⚠️ Requesting camera permission...")
             let requestStatus = try await wearables.requestPermission(permission)
             if requestStatus == .granted {
+                print("✅ Permission granted after request, starting stream...")
                 await streamSession.start()
+                print("🎬 Stream state: \(streamSession.state)")
+            } else {
+                print("❌ Permission denied: \(requestStatus)")
             }
         } catch {
-            print("Permission error: \(error)")
+            print("❌ Permission error: \(error)")
         }
     }
     
@@ -184,8 +206,8 @@ class ModelTestingViewModel: ObservableObject {
         isTesting = true
         defer { isTesting = false }
         
-        // Test primary models first
-        let models: [GeminiModel] = [.flash2_0, .flash1_5, .pro1_5]
+        // Test current Gemini 2.5 models (recommended)
+        let models: [GeminiModel] = [.flash2_5, .flashLite2_5, .pro2_5]
         
         for model in models {
             let service = GeminiAPIService(
@@ -223,50 +245,6 @@ class ModelTestingViewModel: ObservableObject {
                 
                 // Log detailed error for debugging
                 print("❌ Model test failed for \(model.rawValue): \(error)")
-                
-                // Try fallback if available
-                let fallbackModel: GeminiModel? = {
-                    switch model {
-                    case .flash1_5: return .flash1_5_base
-                    case .pro1_5: return .pro1_5_base
-                    default: return nil
-                    }
-                }()
-                
-                if let fallback = fallbackModel {
-                    print("🔄 Trying fallback model: \(fallback.rawValue)")
-                    let fallbackService = GeminiAPIService(
-                        apiKey: apiKey,
-                        model: fallback,
-                        promptStrategy: selectedPrompt
-                    )
-                    
-                    do {
-                        let translation = try await fallbackService.translateImage(
-                            frame,
-                            sourceLang: sourceLang,
-                            targetLang: targetLang
-                        )
-                        
-                        let finalDuration = Date().timeIntervalSince(startTime)
-                        
-                        let result = TestResult(
-                            timestamp: Date(),
-                            testType: .modelComparison,
-                            translation: translation,
-                            model: "\(model.displayName) (fallback)",
-                            promptStrategy: selectedPrompt.displayName,
-                            duration: finalDuration,
-                            isSuccess: true,
-                            error: nil
-                        )
-                        
-                        testResults.insert(result, at: 0)
-                        continue
-                    } catch {
-                        print("❌ Fallback also failed: \(error)")
-                    }
-                }
                 
                 let errorDescription: String
                 if let geminiError = error as? GeminiTranslationError {
@@ -421,7 +399,8 @@ class ModelTestingViewModel: ObservableObject {
         isTesting = true
         defer { isTesting = false }
         
-        let allModels: [GeminiModel] = [.flash2_0, .flash1_5, .flash1_5_base, .pro1_5, .pro1_5_base]
+        // Test all 2024-2025 models
+        let allModels: [GeminiModel] = [.flash2_0, .flash2_5, .flashLite2_5, .pro2_5, .flash2_0_001, .flashLite2_0]
         
         for model in allModels {
             let service = GeminiAPIService(apiKey: apiKey, model: model, promptStrategy: .concise)

@@ -42,6 +42,16 @@ struct ModelTestingView: View {
         .sheet(isPresented: $showSettings) {
             TestingSettingsView(viewModel: viewModel)
         }
+        .onAppear {
+            Task {
+                await viewModel.startSession()
+            }
+        }
+        .onDisappear {
+            Task {
+                await viewModel.stopSession()
+            }
+        }
     }
     
     // MARK: - Header
@@ -75,10 +85,55 @@ struct ModelTestingView: View {
     
     private var videoFeedView: some View {
         Group {
-            if let frame = viewModel.currentVideoFrame {
-                Image(uiImage: frame)
+            // Show captured frame if available, otherwise show live feed
+            if let capturedFrame = viewModel.capturedFrame {
+                // FROZEN - Captured frame for testing
+                Image(uiImage: capturedFrame)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
+                    .overlay(
+                        VStack {
+                            Spacer()
+                            HStack {
+                                Image(systemName: "lock.fill")
+                                Text("FROZEN")
+                                Spacer()
+                                Button(action: {
+                                    viewModel.capturedFrame = nil
+                                }) {
+                                    HStack {
+                                        Image(systemName: "arrow.clockwise")
+                                        Text("Resume Live")
+                                    }
+                                    .padding(8)
+                                    .background(Color.blue)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(8)
+                                }
+                            }
+                            .padding()
+                            .background(Color.black.opacity(0.7))
+                        }
+                    )
+            } else if let liveFrame = viewModel.currentVideoFrame {
+                // LIVE - Continuous video feed
+                Image(uiImage: liveFrame)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .overlay(
+                        VStack {
+                            Spacer()
+                            HStack {
+                                Image(systemName: "video.fill")
+                                    .foregroundColor(.red)
+                                Text("LIVE")
+                                    .foregroundColor(.red)
+                                Spacer()
+                            }
+                            .padding(8)
+                            .background(Color.black.opacity(0.7))
+                        }
+                    )
             } else {
                 VStack(spacing: 10) {
                     Image(systemName: "camera.fill")
@@ -278,9 +333,10 @@ struct TestingSettingsView: View {
                 
                 Section("Default Model") {
                     Picker("Model", selection: $viewModel.selectedModel) {
-                        Text("Gemini 2.0 Flash").tag(GeminiModel.flash2_0)
-                        Text("Gemini 1.5 Flash").tag(GeminiModel.flash1_5)
-                        Text("Gemini 1.5 Pro").tag(GeminiModel.pro1_5)
+                        Text("Gemini 2.5 Flash ⭐").tag(GeminiModel.flash2_5)
+                        Text("Gemini 2.5 Flash Lite").tag(GeminiModel.flashLite2_5)
+                        Text("Gemini 2.5 Pro").tag(GeminiModel.pro2_5)
+                        Text("Gemini 2.0 Flash (Exp)").tag(GeminiModel.flash2_0)
                     }
                 }
                 

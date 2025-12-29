@@ -33,20 +33,14 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
-	<!-- Begin required section for Device Access Toolkit Apps -->
-	<!-- Meta Wearables Device Access Toolkit Setup -->
 	<key>MWDAT</key>
 	<dict>
 		<key>AppLinkURLScheme</key>
-		<!-- Tell DAT your URL scheme so it can be called back from Meta AI -->
 		<string>cameraaccess://</string>
 		<key>MetaAppID</key>
-		<!-- Without Developer Mode, this key will need to be set with ID from the app registered in Wearables Developer Center -->
 		<string>0</string>
-		<!-- Without Developer Mode, this key will need to be set with ClientToken from the app registered in Wearables Developer Center -->
 		<key>ClientToken</key>
 		<string>$(CLIENT_TOKEN)</string>
-		<!-- Without Developer Mode, this key will need to be set with your Apple Developer Team ID - Set this in Xcode under Signing & Capabilities -->
 		<key>TeamID</key>
 		<string>$(DEVELOPMENT_TEAM)</string>
 	</dict>
@@ -61,7 +55,6 @@
 	<array>
 		<string>com.meta.ar.wearable</string>
 	</array>
-	<!-- End required section for Device Access Toolkit Apps -->
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>This app needs access to save photos captured from your glasses.</string>
 	<key>UIApplicationSceneManifest</key>
@@ -71,14 +64,12 @@
 	</dict>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
-
 	<key>UILaunchScreen</key>
 	<dict/>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
 	</array>
-
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -90,6 +81,12 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>LSApplicationCategoryType</key>
+	<string></string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Used to listen for your questions about what you&apos;re seeing through the Ray-Ban glasses</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Converts your questions to text so we can answer them with visual AI</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fb-viewapp</string>
