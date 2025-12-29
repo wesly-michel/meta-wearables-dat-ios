@@ -65,7 +65,9 @@ class TranslationViewModel: ObservableObject {
         
         // Initialize services with Gemini
         let apiKey = UserDefaults.standard.string(forKey: "geminiAPIKey") ?? ""
-        self.geminiAPI = GeminiAPIService(apiKey: apiKey)
+        // Use Flash 2.5 with CONCISE prompt for fastest real-time translation
+        // (Testing tab can use detailed prompts, but real-time needs speed)
+        self.geminiAPI = GeminiAPIService(apiKey: apiKey, model: .flash2_5, promptStrategy: .concise)
         self.frameThrottler = FrameThrottler(interval: throttleInterval)
         self.ttsService = TTSService()
         

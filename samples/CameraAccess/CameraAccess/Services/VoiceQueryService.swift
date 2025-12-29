@@ -108,35 +108,31 @@ class VoiceQueryService: NSObject {
         
         // Start recognition task
         recognitionTask = speechRecognizer.recognitionTask(with: recognitionRequest) { [weak self] result, error in
-            guard let self = self else { return }
-            
-            if let result = result {
-                let transcription = result.bestTranscription.formattedString
-                self.currentTranscription = transcription
+            Task { @MainActor [weak self] in
+                guard let self = self else { return }
                 
-                // Send partial results
-                DispatchQueue.main.async {
+                if let result = result {
+                    let transcription = result.bestTranscription.formattedString
+                    self.currentTranscription = transcription
+                    
+                    // Send partial results
                     self.onPartialTranscription?(transcription)
+                    
+                    // Check if final
+                    if result.isFinal {
+                        self.onFinalTranscription?(transcription)
+                        Task {
+                            await self.stopListening()
+                        }
+                    }
                 }
                 
-                // Check if final
-                if result.isFinal {
-                    DispatchQueue.main.async {
-                        self.onFinalTranscription?(transcription)
-                    }
+                if let error = error {
+                    print("⚠️ Recognition error: \(error.localizedDescription)")
+                    self.onError?(error)
                     Task {
                         await self.stopListening()
                     }
-                }
-            }
-            
-            if let error = error {
-                print("⚠️ Recognition error: \(error.localizedDescription)")
-                DispatchQueue.main.async {
-                    self.onError?(error)
-                }
-                Task {
-                    await self.stopListening()
                 }
             }
         }

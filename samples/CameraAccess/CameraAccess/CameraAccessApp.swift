@@ -45,7 +45,7 @@ struct CameraAccessApp: App {
 
   var body: some Scene {
     WindowGroup {
-      // ✅ NEW: TabView for switching between Translation and Testing
+      // ✅ TabView for switching between Translation, Testing, and Vision modes
       TabView {
         // Tab 1: Main Translation View
         CameraTranslationView()
@@ -57,6 +57,12 @@ struct CameraAccessApp: App {
         ModelTestingView()
           .tabItem {
             Label("Testing", systemImage: "cpu.fill")
+          }
+        
+        // Tab 3: Continuous Vision Mode
+        ContinuousVisionView()
+          .tabItem {
+            Label("Vision", systemImage: "eye.fill")
           }
       }
       .accentColor(.blue)

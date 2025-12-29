@@ -213,7 +213,7 @@ struct CameraTranslationView: View {
                 .font(.caption2)
                 .foregroundColor(.white)
             
-            Text("💰 Model: Gemini 2.0 Flash")
+            Text("💰 Model: Gemini 2.5 Flash (Concise)")
                 .font(.caption2)
                 .foregroundColor(.green)
         }
