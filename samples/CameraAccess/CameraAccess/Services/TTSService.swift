@@ -10,27 +10,28 @@ import AVFoundation
 import Foundation
 
 @MainActor
-class TTSService: NSObject, AVSpeechSynthesizerDelegate {
+class TTSService: NSObject {
     private let synthesizer = AVSpeechSynthesizer()
     private var isSpeaking = false
-    
+
     override init() {
         super.init()
         synthesizer.delegate = self
-        configureAudioSession()
+        // Don't configure audio session on init - let VoiceActivationDetector manage it
     }
-    
-    /// Configure audio session to route to Bluetooth (Ray-Ban glasses)
-    private func configureAudioSession() {
+
+    /// Ensure audio session is ready for playback (called before speaking)
+    private func ensureAudioSessionForPlayback() {
         do {
             let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.playback, mode: .spokenAudio, options: [.allowBluetoothHFP])
-            try audioSession.setActive(true)
+            // Use HFP profile for Ray-Ban glasses (two-way voice) per Meta docs
+            try audioSession.setCategory(.playAndRecord, mode: .default, options: [.allowBluetooth, .defaultToSpeaker])
+            try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
         } catch {
             print("⚠️ TTSService: Failed to configure audio session: \(error)")
         }
     }
-    
+
     /// Speak translated text through Ray-Ban glasses speakers
     /// - Parameters:
     ///   - text: The text to speak
@@ -41,40 +42,52 @@ class TTSService: NSObject, AVSpeechSynthesizerDelegate {
         if isSpeaking {
             synthesizer.stopSpeaking(at: .immediate)
         }
-        
+
+        // Ensure audio session is configured for playback
+        ensureAudioSessionForPlayback()
+
+        print("🔊 TTSService: Speaking: \(text.prefix(50))...")
+
         // Create utterance
         let utterance = AVSpeechUtterance(string: text)
         utterance.voice = AVSpeechSynthesisVoice(language: language)
         utterance.rate = rate
         utterance.pitchMultiplier = 1.0
         utterance.volume = 1.0
-        
+
         // Speak
-        await MainActor.run {
-            isSpeaking = true
-            synthesizer.speak(utterance)
-        }
-        
+        isSpeaking = true
+        synthesizer.speak(utterance)
+
         // Wait for speech to finish
         while isSpeaking {
             try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
         }
     }
-    
+
     /// Stop any ongoing speech
     func stop() {
         synthesizer.stopSpeaking(at: .immediate)
         isSpeaking = false
     }
-    
-    // MARK: - AVSpeechSynthesizerDelegate
-    
+
+    // Called from delegate extension
+    fileprivate func markSpeechFinished() {
+        Task { @MainActor in
+            self.isSpeaking = false
+        }
+    }
+}
+
+// MARK: - AVSpeechSynthesizerDelegate (nonisolated for Swift 6 compatibility)
+
+extension TTSService: AVSpeechSynthesizerDelegate {
     nonisolated func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         Task { @MainActor in
             self.isSpeaking = false
         }
     }
-    
+
     nonisolated func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
         Task { @MainActor in
             self.isSpeaking = false

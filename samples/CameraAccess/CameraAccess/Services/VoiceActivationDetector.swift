@@ -35,11 +35,17 @@ class VoiceActivationDetector {
     
     func startMonitoring() throws {
         guard !isMonitoring else { return }
-        
-        // Configure audio session for input
+
+        // Configure audio session for HFP (two-way voice) with Ray-Ban glasses
+        // Uses .allowBluetooth for HFP profile (microphone + speaker) per Meta docs
         let audioSession = AVAudioSession.sharedInstance()
-        try audioSession.setCategory(.record, mode: .measurement)
-        try audioSession.setActive(true)
+        try audioSession.setCategory(.playAndRecord, mode: .default, options: [.allowBluetooth, .defaultToSpeaker])
+        try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
+
+        // Log current audio route for debugging
+        let currentRoute = audioSession.currentRoute
+        print("🔈 VAD Audio input: \(currentRoute.inputs.map { "\($0.portName) (\($0.portType.rawValue))" }.joined(separator: ", "))")
+        print("🔈 VAD Audio output: \(currentRoute.outputs.map { "\($0.portName) (\($0.portType.rawValue))" }.joined(separator: ", "))")
         
         let inputNode = audioEngine.inputNode
         let inputFormat = inputNode.outputFormat(forBus: 0)
@@ -57,23 +63,33 @@ class VoiceActivationDetector {
     }
     
     func stopMonitoring() {
+        stopMonitoring(deactivateSession: true)
+    }
+
+    /// Stop monitoring with option to keep audio session active
+    /// - Parameter deactivateSession: If false, keeps audio session active for seamless handoff to speech recognition
+    func stopMonitoring(deactivateSession: Bool) {
         guard isMonitoring else { return }
-        
+
         audioEngine.inputNode.removeTap(onBus: 0)
         audioEngine.stop()
-        
-        do {
-            try AVAudioSession.sharedInstance().setActive(false)
-        } catch {
-            print("⚠️ Failed to deactivate audio session: \(error)")
+
+        if deactivateSession {
+            do {
+                try AVAudioSession.sharedInstance().setActive(false)
+            } catch {
+                print("⚠️ Failed to deactivate audio session: \(error)")
+            }
+        } else {
+            print("🔈 VAD: Keeping audio session active for speech recognition handoff")
         }
-        
+
         isMonitoring = false
         isSpeaking = false
         speechStartTime = nil
         lastSpeechTime = nil
-        
-        print("🛑 VoiceActivationDetector: Stopped monitoring")
+
+        print("🛑 VoiceActivationDetector: Stopped monitoring (session active: \(!deactivateSession))")
     }
     
     // MARK: - Audio Processing
@@ -109,21 +125,22 @@ class VoiceActivationDetector {
     
     private func updateSpeechState(isSpeechDetected: Bool) {
         let now = Date()
-        
+
         if isSpeechDetected {
             // Speech detected
             lastSpeechTime = now
-            
+
             if !isSpeaking {
                 // Start of new speech
                 if speechStartTime == nil {
                     speechStartTime = now
+                    print("🎤 Possible speech starting...")
                 } else if let startTime = speechStartTime,
                           now.timeIntervalSince(startTime) >= speechDuration {
                     // Speech has been sustained long enough
                     isSpeaking = true
+                    print("🎤 Speech confirmed - triggering recognition")
                     onSpeechStarted?()
-                    print("🎤 Speech started")
                 }
             }
         } else {
@@ -135,10 +152,13 @@ class VoiceActivationDetector {
                     isSpeaking = false
                     speechStartTime = nil
                     onSpeechEnded?()
-                    print("🔇 Speech ended")
+                    print("🔇 Speech ended (silence detected)")
                 }
             } else {
                 // Reset if not enough speech to trigger
+                if speechStartTime != nil {
+                    print("🔇 Speech attempt cancelled (too short)")
+                }
                 speechStartTime = nil
             }
         }

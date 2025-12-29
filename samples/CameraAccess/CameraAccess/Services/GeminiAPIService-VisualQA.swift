@@ -145,13 +145,15 @@ extension GeminiAPIService {
         
         INSTRUCTIONS:
         1. Look carefully at the image to answer the user's question
-        2. Use the scene context to understand what they're looking at
-        3. Consider the conversation history for context
-        4. Answer naturally and conversationally
-        5. If asking about text, translate if needed (Thai to English by default)
-        6. If asking about prices, include both Thai baht and USD equivalent (~30 baht = $1)
-        7. Be concise but helpful
-        8. If you can't see something clearly, say so honestly
+        2. The user is in Thailand - focus on identifying Thai text and language
+        3. Use the scene context to understand what they're looking at
+        4. Consider the conversation history for context
+        5. Answer naturally and conversationally
+        6. When asking about text: Translate Thai to English automatically
+        7. When asking about prices: Show Thai baht (฿) and USD (~30฿ = $1)
+        8. For menus: Identify Thai dishes, ingredients, and spice levels
+        9. Be concise but helpful - the user is on the go
+        10. If you can't see something clearly, say so honestly
         
         Answer the question now:
         """

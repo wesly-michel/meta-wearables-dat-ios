@@ -120,25 +120,25 @@ struct ContinuousVisionView: View {
     }
     
     // MARK: - Scene Context Banner
-    
+
     private var sceneContextBanner: some View {
         HStack(spacing: 8) {
             Image(systemName: "eye.fill")
                 .foregroundColor(sceneContextColor)
-            
+
             VStack(alignment: .leading, spacing: 2) {
                 Text("What I see:")
                     .font(.caption2)
                     .foregroundColor(.gray)
-                
+
                 Text(viewModel.sceneContext.description)
                     .font(.caption)
                     .foregroundColor(.white)
                     .lineLimit(2)
             }
-            
+
             Spacer()
-            
+
             // Confidence indicator
             Circle()
                 .fill(sceneContextColor)
@@ -147,6 +147,9 @@ struct ContinuousVisionView: View {
         .padding(.horizontal)
         .padding(.vertical, 8)
         .background(Color.black.opacity(0.7))
+        .onChange(of: viewModel.sceneContext.description) { oldValue, newValue in
+            print("👁️ Scene context updated: '\(newValue)' (confidence: \(viewModel.sceneContext.confidence))")
+        }
     }
     
     private var sceneContextColor: Color {
